@@ -7,8 +7,6 @@ import { useRef, useState } from "react";
 const cx = classNames.bind(Styles);
 
 function LogIn() {
-  let isValidEmail = false;
-  let isValidPass = false;
   // xử lí chức năng cho form
   // trường username
   const checkIsEmail = (userName) => {
@@ -52,11 +50,12 @@ function LogIn() {
   const handleLoginBtn = () => {
     const isEmail = checkIsEmail(userNameInputState); // ok
     const isPassword = passwordInputState.length >= 6;
+    if (!isEmail)
+      error_username.current.innerText = "Trường này phải là email !";
+    if (!isPassword)
+      error_pass.current.innerText = "Mật khẩu phải lớn hơn 6 kí tự !";
     if (isEmail && isPassword) {
       navigate(`/home?a=${passwordInputState}`);
-    } else {
-      error_username.current.innerText = "Trường này phải là email !";
-      error_pass.current.innerText = "Mật khẩu phải lớn hơn 6 kí tự !";
     }
   };
 
