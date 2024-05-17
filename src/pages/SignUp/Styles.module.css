@@ -23,7 +23,7 @@ input {
 .form-container {
   position: relative;
   width: 350px;
-  height: 90%;
+  height: 95%;
   border-radius: 20px;
   padding: 40px;
   box-sizing: border-box;
@@ -48,7 +48,7 @@ input {
 }
 .inputs {
   text-align: left;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 .email-label {
   display: block;
@@ -90,7 +90,7 @@ button {
   outline: none;
   box-sizing: border-box;
   color: white;
-  margin-top: 20px;
+  margin-top: 0px;
   background: #1da1f2;
   height: 40px;
   border-radius: 20px;
@@ -99,22 +99,28 @@ button {
   box-shadow: 6px 6px 6px #cbced1, -6px -6px 6px white;
   transition: 0.5s;
 }
-
+label {
+  cursor: pointer;
+  user-select: none;
+}
 button:hover {
   box-shadow: none;
 }
+.error-pass-confirm,
 .error-email,
 .error-pass {
-  font-size: 0.8rem;
-  color: red;
-  height: 10px;
-  font-family: poppins;
   display: flex;
   justify-content: end;
+  font-size: 0.8rem;
+  color: red;
+  height: 15px;
+  font-family: poppins;
+  user-select: none;
 }
-.login,
-.signup {
-  margin-top: 20px;
+.hasAccount {
+}
+.signupBtn {
+  margin-top: 0;
 }
 @keyframes fadeIn {
   from {

@@ -1,7 +1,7 @@
 import classNames from "classnames/bind";
 import { Link, useNavigate } from "react-router-dom";
 
-import Styles from "./styles.module.css";
+import Styles from "./Styles.module.css";
 import { useRef, useState } from "react";
 
 const cx = classNames.bind(Styles);
@@ -54,6 +54,9 @@ function LogIn() {
     const isPassword = passwordInputState.length >= 6;
     if (isEmail && isPassword) {
       navigate(`/home?a=${passwordInputState}`);
+    } else {
+      error_username.current.innerText = "Trường này phải là email !";
+      error_pass.current.innerText = "Mật khẩu phải lớn hơn 6 kí tự !";
     }
   };
 
@@ -87,8 +90,17 @@ function LogIn() {
               placeholder="Min 6 charaters long"
             />
             <div ref={error_pass} className={cx("error-pass")}></div>
-            <button onClick={handleLoginBtn}>LOGIN</button>
-            <button>Sign Up</button>
+            <button className={cx("login")} onClick={handleLoginBtn}>
+              LOGIN
+            </button>
+            <button
+              className={cx("signup")}
+              onClick={() => {
+                navigate("/signup");
+              }}
+            >
+              Sign Up
+            </button>
           </div>
         </div>
       </div>
