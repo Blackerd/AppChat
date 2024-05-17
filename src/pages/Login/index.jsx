@@ -1,110 +1,135 @@
 import classNames from "classnames/bind";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 
-import Styles from "./Styles.module.css";
-import { useRef, useState } from "react";
-
+import Styles from "./styles.module.css";
+import InputComponent from "../../components/input/InputComponent";
+import ButtonComponent from "../../components/button/ButtonComponent";
+import { isEmail, isPassValid } from "../../process/checkInput";
 const cx = classNames.bind(Styles);
-
 function LogIn() {
-  // xử lí chức năng cho form
-  // trường username
-  const checkIsEmail = (userName) => {
-    const regex =
-      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    return !(!userName || regex.test(userName) === false);
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+
+  const inputEmail = useRef();
+  const inputPass = useRef();
+  const handleEmailOnChange = (e) => {
+    setEmail((prev) => {
+      return e.target.value;
+    });
   };
-  const userNameInput = useRef();
-  const error_username = useRef();
-  const [userNameInputState, setUserNameInputState] = useState("");
-  const handleUserNameInput = (e) => {
-    setUserNameInputState((prev) => e.target.value);
+  const handlePassOnChange = (e) => {
+    setPass((prev) => {
+      return e.target.value;
+    });
   };
 
-  const handleOnBlurUsernameInput = () => {
-    const isEmail = checkIsEmail(userNameInputState); // ok
-    if (!isEmail) {
-      error_username.current.innerText = "Trường này phải là email !";
-    } else {
-      error_username.current.innerText = "";
+  const handleLoginBtn = (e) => {
+    if (!isEmail(email)) {
+      inputEmail.current.setError("Vui lòng nhập đúng email !!");
+    }
+    if (!isPassValid(pass)) {
+      inputPass.current.setError("Phải có ít nhất 6 kí tự");
+    }
+    if (isEmail(email) && isPassValid(pass)) {
+      console.log("gui respeut ok !!!!!");
     }
   };
-
-  // trường password
-  const passwordInput = useRef();
-  const error_pass = useRef();
-  const [passwordInputState, setPasswordInputState] = useState("");
-  const handlePasswordInput = (e) => {
-    setPasswordInputState((prev) => e.target.value);
-  };
-  const handleOnBlurPasswordInput = () => {
-    const isPassword = passwordInputState.length >= 6;
-    if (!isPassword) {
-      error_pass.current.innerText = "Mật khẩu phải lớn hơn 6 kí tự !";
-    } else {
-      error_pass.current.innerText = "";
-    }
-  };
-  let navigate = useNavigate();
-  // nut LogIn
-  const handleLoginBtn = () => {
-    const isEmail = checkIsEmail(userNameInputState); // ok
-    const isPassword = passwordInputState.length >= 6;
-    if (!isEmail)
-      error_username.current.innerText = "Trường này phải là email !";
-    if (!isPassword)
-      error_pass.current.innerText = "Mật khẩu phải lớn hơn 6 kí tự !";
-    if (isEmail && isPassword) {
-      navigate(`/home?a=${passwordInputState}`);
-    }
-  };
-
+  const handleSigninBtn = () => {};
   return (
     <>
-      <div className={cx("container")}>
+      <section className={cx("container")}>
         <div className={cx("form-container")}>
           <div className={cx("brand-logo")}></div>
           <div className={cx("brand-title")}>TWITTER</div>
-          <div className={cx("inputs")}>
-            <label className={cx("email-label")}>EMAIL</label>
-            <input
-              value={userNameInputState}
-              onChange={handleUserNameInput}
-              onBlur={handleOnBlurUsernameInput}
-              ref={userNameInput}
-              type="email"
-              placeholder="example@test.com"
+          <form className={cx("inputs")}>
+            <label htmlFor="email">Email</label>
+            <InputComponent
+              id="email"
+              inputValue={email}
+              placeholder="example@gmail.com"
+              onChange={handleEmailOnChange}
+              onBlur={() =>
+                !isEmail(email)
+                  ? inputEmail.current.setError("Vui lòng nhập đúng email .")
+                  : inputEmail.current.setError("")
+              }
+              ref={inputEmail}
             />
-            <div ref={error_username} className={cx("error-email")}></div>
-            <div className={cx("pass-label")}>
-              <label className={cx("password-text")}>PASSWORD</label>
-              <Link className={cx("forgot")}>forgot password ?</Link>
-            </div>
-            <input
-              value={passwordInputState}
-              ref={passwordInput}
-              onChange={handlePasswordInput}
-              onBlur={handleOnBlurPasswordInput}
-              type="password"
-              placeholder="Min 6 charaters long"
+            <label htmlFor="password">Password</label>
+            <InputComponent
+              id="password"
+              inputValue={pass}
+              placeholder="The PassWord must At least has 6 letter ."
+              onChange={handlePassOnChange}
+              onBlur={() =>
+                !isPassValid(pass)
+                  ? inputPass.current.setError("Ít nhất phải có 6 kí tự .")
+                  : inputPass.current.setError("")
+              }
+              ref={inputPass}
             />
-            <div ref={error_pass} className={cx("error-pass")}></div>
-            <button className={cx("login")} onClick={handleLoginBtn}>
-              LOGIN
-            </button>
-            <button
-              className={cx("signup")}
-              onClick={() => {
-                navigate("/signup");
-              }}
-            >
-              Sign Up
-            </button>
-          </div>
+          </form>
+          <ButtonComponent title="Login " onClick={handleLoginBtn} />
+          <ButtonComponent title="Sign In" onClick={handleSigninBtn} />
         </div>
-      </div>
+      </section>
     </>
   );
 }
+// const query = useQuery();
+// const searchQuery = query.get("a");
+// console.log(typeof searchQuery);
+
+//       // navigate(`/home?a=${passwordInputState}`);
+//       // gửi dữ liệu cho server
+//       // fetch(
+//       //   `http://localhost:8080/api/user?email=${userNameInputState}&password=${passwordInputState}`
+//       // )
+//       //   .then((response) => {
+//       //     if (!response.ok) {
+//       //       throw new Error(
+//       //         "Network response was not ok " + response.statusText
+//       //       );
+//       //     }
+//       //     return response.json();
+//       //   })
+//       //   .then((data) => {
+//       //     console.log(data); // Dữ liệu từ server
+//       //     console.log("data was send");
+//       //   })
+//       //   .catch((error) => {
+//       //     console.error("There was a problem with the fetch operation:", error);
+//       //   });
+
+//       // Dữ liệu gửi đi
+//       const data = {
+//         email: userNameInputState,
+//         pass: passwordInputState,
+//       };
+
+//       // Gửi yêu cầu POST bằng fetch
+//       fetch("http://localhost:8080/api/save", {
+//         method: "POST", // Thiết lập phương thức là POST
+//         headers: {
+//           "Content-Type": "application/json", // Đặt header Content-Type
+//         },
+//         body: JSON.stringify(data), // Chuyển dữ liệu thành chuỗi JSON
+//       })
+//         .then((response) => {
+//           if (!response.ok) {
+//             throw new Error(
+//               "Network response was not ok " + response.statusText
+//             );
+//           }
+//           return response.json();
+//         })
+//         .then((data) => {
+//           console.log("Success:", data);
+//         })
+//         .catch((error) => {
+//           console.error("Error:", error);
+//         });
+//     }
+//   };
 
 export default LogIn;
