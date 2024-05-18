@@ -8,7 +8,6 @@ const cx = classNames.bind(Styles);
 function InputComponent(props, ref) {
   const errorE = useRef();
   const [isShake, SetisSHake] = useState(false);
-
   useImperativeHandle(ref, () => ({
     setError(error) {
       console.log(error);
@@ -27,7 +26,7 @@ function InputComponent(props, ref) {
       <input
         id={props.id}
         value={props.inputValue}
-        type="text"
+        type={props.typeOf}
         className={cx("textInput")}
         placeholder={props.placeholder}
         onChange={props.onChange}

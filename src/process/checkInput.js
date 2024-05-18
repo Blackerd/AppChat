@@ -6,5 +6,8 @@ function isEmail(value) {
 function isPassValid(value) {
   return value.length >= 6;
 }
+function isConfirmPass(confirm, pass) {
+  return confirm.length > 0 && confirm === pass;
+}
 
-export { isEmail, isPassValid };
+export { isEmail, isPassValid, isConfirmPass };

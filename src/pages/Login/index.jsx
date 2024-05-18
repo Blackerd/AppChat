@@ -5,6 +5,7 @@ import Styles from "./styles.module.css";
 import InputComponent from "../../components/input/InputComponent";
 import ButtonComponent from "../../components/button/ButtonComponent";
 import { isEmail, isPassValid } from "../../process/checkInput";
+import { useNavigate } from "react-router-dom";
 const cx = classNames.bind(Styles);
 function LogIn() {
   const [email, setEmail] = useState("");
@@ -34,7 +35,7 @@ function LogIn() {
       console.log("gui respeut ok !!!!!");
     }
   };
-  const handleSigninBtn = () => {};
+  const handleSignupBtn = () => {};
   return (
     <>
       <section className={cx("container")}>
@@ -44,6 +45,7 @@ function LogIn() {
           <form className={cx("inputs")}>
             <label htmlFor="email">Email</label>
             <InputComponent
+              typeOf="text"
               id="email"
               inputValue={email}
               placeholder="example@gmail.com"
@@ -57,6 +59,7 @@ function LogIn() {
             />
             <label htmlFor="password">Password</label>
             <InputComponent
+              typeOf="password"
               id="password"
               inputValue={pass}
               placeholder="The PassWord must At least has 6 letter ."
@@ -70,7 +73,11 @@ function LogIn() {
             />
           </form>
           <ButtonComponent title="Login " onClick={handleLoginBtn} />
-          <ButtonComponent title="Sign In" onClick={handleSigninBtn} />
+          <ButtonComponent
+            to="/signup"
+            title="Sign Up"
+            onClick={handleSignupBtn}
+          />
         </div>
       </section>
     </>
@@ -79,57 +86,5 @@ function LogIn() {
 // const query = useQuery();
 // const searchQuery = query.get("a");
 // console.log(typeof searchQuery);
-
-//       // navigate(`/home?a=${passwordInputState}`);
-//       // gửi dữ liệu cho server
-//       // fetch(
-//       //   `http://localhost:8080/api/user?email=${userNameInputState}&password=${passwordInputState}`
-//       // )
-//       //   .then((response) => {
-//       //     if (!response.ok) {
-//       //       throw new Error(
-//       //         "Network response was not ok " + response.statusText
-//       //       );
-//       //     }
-//       //     return response.json();
-//       //   })
-//       //   .then((data) => {
-//       //     console.log(data); // Dữ liệu từ server
-//       //     console.log("data was send");
-//       //   })
-//       //   .catch((error) => {
-//       //     console.error("There was a problem with the fetch operation:", error);
-//       //   });
-
-//       // Dữ liệu gửi đi
-//       const data = {
-//         email: userNameInputState,
-//         pass: passwordInputState,
-//       };
-
-//       // Gửi yêu cầu POST bằng fetch
-//       fetch("http://localhost:8080/api/save", {
-//         method: "POST", // Thiết lập phương thức là POST
-//         headers: {
-//           "Content-Type": "application/json", // Đặt header Content-Type
-//         },
-//         body: JSON.stringify(data), // Chuyển dữ liệu thành chuỗi JSON
-//       })
-//         .then((response) => {
-//           if (!response.ok) {
-//             throw new Error(
-//               "Network response was not ok " + response.statusText
-//             );
-//           }
-//           return response.json();
-//         })
-//         .then((data) => {
-//           console.log("Success:", data);
-//         })
-//         .catch((error) => {
-//           console.error("Error:", error);
-//         });
-//     }
-//   };
 
 export default LogIn;

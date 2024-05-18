@@ -1,8 +1,4 @@
-/* @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;900&display=swap");
-
-input {
-  caret-color: red;
-}
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;900&display=swap");
 
 .container {
   animation: fadeIn 1s ease-in-out;
@@ -20,6 +16,7 @@ input {
   overflow: hidden;
   font-family: poppins;
 }
+
 .form-container {
   position: relative;
   width: 350px;
@@ -42,86 +39,19 @@ input {
 .brand-title {
   margin-top: 10px;
   font-weight: 900;
-  font-size: 1.8rem;
+  font-size: 2rem;
   color: #1da1f2;
   letter-spacing: 1px;
 }
+
 .inputs {
   text-align: left;
-  margin-top: 10px;
+  font-size: 2rem;
 }
-.email-label {
-  display: block;
-  width: 100%;
-  padding: 5px 0px;
-  border: none;
-  outline: none;
-  box-sizing: border-box;
+.link {
+  font-size: 1.4rem;
 }
-.forgot {
-  text-decoration: none;
-}
-input {
-  display: block;
-  width: 100%;
-  border: none;
-  outline: none;
-  box-sizing: border-box;
-  background: #ecf0f3;
-  padding-left: 20px;
-  height: 50px;
-  font-size: 14px;
-  border-radius: 50px;
-  box-shadow: inset 6px 6px 6px #cbced1, inset -6px -6px 6px white;
-}
-label:nth-of-type(2) {
-  margin-top: 12px;
-}
-.pass-label {
-  display: flex;
-  padding: 10px 5px 0px 0px;
-  justify-content: space-between;
-}
-button {
-  display: block;
-  width: 100%;
-  padding: 0;
-  border: none;
-  outline: none;
-  box-sizing: border-box;
-  color: white;
-  margin-top: 0px;
-  background: #1da1f2;
-  height: 40px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: 900;
-  box-shadow: 6px 6px 6px #cbced1, -6px -6px 6px white;
-  transition: 0.5s;
-}
-label {
-  cursor: pointer;
-  user-select: none;
-}
-button:hover {
-  box-shadow: none;
-}
-.error-pass-confirm,
-.error-email,
-.error-pass {
-  display: flex;
-  justify-content: end;
-  font-size: 0.8rem;
-  color: red;
-  height: 15px;
-  font-family: poppins;
-  user-select: none;
-}
-.hasAccount {
-}
-.signupBtn {
-  margin-top: 0;
-}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -132,23 +62,3 @@ button:hover {
     transform: translateY(0);
   }
 }
-.shake {
-  animation: shake 1s ease-in-out;
-}
-@keyframes shake {
-  0% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-5px);
-  }
-  50% {
-    transform: translateX(5px);
-  }
-  75% {
-    transform: translateX(-5px);
-  }
-  100% {
-    transform: translateX(0);
-  }
-} */
