@@ -9,7 +9,7 @@ import { publicRoutes, privateRoutes } from "./routes";
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="App" style={{ width: "100%", height: "100%" }}>
         <Routes>
           {publicRoutes.map((route, index) => {
             return (
