@@ -1,8 +1,27 @@
 import React, { useState } from 'react';
 import styles from './styles.module.css';
+import { useNavigate } from 'react-router-dom'; // Sử dụng React Router
+
 
 const AccountProtection = () => {
     const [toggleState, setToggleState] = useState(false);
+    const navigate = useNavigate();
+
+    const protectAccForward = () =>{
+        navigate('/acc_protect');
+    }
+    const informationForward = () =>{
+        navigate('/info');
+    }
+
+    const licenseForward = () =>{
+        navigate('/acc_protect');
+    }
+
+    const historyForward = () =>{
+        navigate('/history');
+    }
+
 
     const handleChangeInfo = (fieldId) => {
         const currentValue = document.getElementById(fieldId).textContent;
@@ -11,7 +30,13 @@ const AccountProtection = () => {
             document.getElementById(fieldId).textContent = newValue;
         }
     };
+    const handleLogout = () => {
+        // Xóa thông tin đăng nhập khỏi localStorage hoặc gọi API để đăng xuất
+        localStorage.removeItem('token');
 
+        // Điều hướng về trang đăng nhập
+        navigate('/');
+    };
     const handleToggleChange = () => {
         setToggleState(!toggleState);
     };
@@ -30,23 +55,23 @@ const AccountProtection = () => {
                 </div>
 
                 <div className={styles.function}>
-                    <div className={styles['function-item']}>
+                    <div className={styles['function-item']} onClick={informationForward}>
                         <h4>Thông tin tài khoản</h4>
                         <span>Quản lý thông tin đăng nhập và thông tin cá nhân</span>
                     </div>
-                    <div className={styles['function-item']}>
+                    <div className={styles['function-item']} onClick={protectAccForward}>
                         <h4>Bảo vệ tài khoản</h4>
                         <span>Hỗ trợ bảo vệ tài khoản</span>
                     </div>
-                    <div className={styles['function-item']}>
+                    <div className={styles['function-item']} onClick={historyForward}>
                         <h4>Nhật kí hoạt động</h4>
                         <span>Lịch sử hoạt động của tài khoản</span>
                     </div>
-                    <div className={styles['function-item']}>
+                    <div className={styles['function-item']} onClick={licenseForward}>
                         <h4>Giấy phép</h4>
                         <span>Tải và chia sẻ giấy phép</span>
                     </div>
-                    <div className={styles['function-item']}>
+                    <div className={styles['function-item']} onClick={handleLogout}>
                             <h4>Đăng xuất</h4>
                     </div>
                 </div>

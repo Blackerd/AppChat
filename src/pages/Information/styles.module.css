@@ -142,15 +142,6 @@ body {
     font-size: 1rem;
 }
 
-.right .info-item button {
-    background: none;
-    border: none;
-    color: var(--primary-color);
-    cursor: pointer;
-    position: absolute;
-    right: 0;
-    top: 0.4rem;
-}
 
 .info-item button:hover {
     color: #0056b3;
