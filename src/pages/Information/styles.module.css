@@ -16,8 +16,9 @@ html {
 }
 
 .contain {
-    border: var(--border-width) solid var(--border-color);
+    /*border: var(--border-width) solid var(--border-color);*/
     padding: 1.5rem;
+    /*background-color: blue;*/
 }
 
 body {
@@ -42,7 +43,7 @@ body {
     width: 27%;
     background-color: #fff;
     padding: 1.5rem;
-    border-right: 1px solid var(--secondary-color);
+    border-right: 0.25px solid var(--secondary-color);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -83,7 +84,14 @@ body {
 
 .function-item {
     border-bottom: 1px solid var(--secondary-color);
-    padding: 1rem 0;
+    padding: 1rem 2rem;
+    border-left: 4px solid transparent;
+
+
+}
+
+.function-item.active {
+    border-left: 4px solid red;
 }
 
 .function-item h4 {
@@ -99,6 +107,7 @@ body {
 .right {
     flex: 1;
     padding: 1.5rem;
+    background-color: #f1efef;
 }
 
 .right .title {

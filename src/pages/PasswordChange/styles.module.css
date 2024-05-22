@@ -16,7 +16,6 @@ html {
 }
 
 .contain {
-    border: var(--border-width) solid var(--border-color);
     padding: 1.5rem;
 }
 
@@ -83,9 +82,20 @@ body {
 
 .function-item {
     border-bottom: 1px solid var(--secondary-color);
-    padding: 1rem 0;
+    padding: 1rem 2rem;
+    border-left: 4px solid transparent;
+
+
 }
 
+.function-item:focus {
+    outline: none;
+    border-left: 4px solid #ff0000;
+}
+
+.function-item:active {
+    border-left: 4px solid #ff0000;
+}
 .function-item h4 {
     margin: 0 0 0.5rem;
     font-size: 1.1rem;
@@ -99,6 +109,8 @@ body {
 .right {
     flex: 1;
     padding: 1.5rem;
+    background-color: #f1efef;
+
 }
 
 .right .title {

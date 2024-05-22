@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import styles from './styles.module.css';
 import { useNavigate } from 'react-router-dom'; // Sử dụng React Router
 
@@ -23,9 +22,6 @@ function Information() {
     }
 
 
-    const licenseForward = () =>{
-        navigate('/license');
-    }
     const historyForward = () =>{
         navigate('/history');
     }
@@ -47,7 +43,6 @@ function Information() {
         navigate('/personalinfo')
 
     }
-
 
 
 
@@ -79,10 +74,7 @@ function Information() {
                         <h4>Nhật kí hoạt động</h4>
                         <span>Lịch sử hoạt động của tài khoản</span>
                     </div>
-                    <div className={styles['function-item']} onClick={licenseForward}>
-                        <h4>Giấy phép</h4>
-                        <span>Tải và chia sẻ giấy phép</span>
-                    </div>
+
                     <div className={styles['function-item']} onClick={handleLogout}>
                         <h4>Đăng xuất</h4>
                     </div>

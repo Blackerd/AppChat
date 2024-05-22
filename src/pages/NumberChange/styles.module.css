@@ -16,7 +16,6 @@ html {
 }
 
 .contain {
-    border: var(--border-width) solid var(--border-color);
     padding: 1.5rem;
 }
 
@@ -99,6 +98,8 @@ body {
 .right {
     flex: 1;
     padding: 1.5rem;
+    background-color: #f1efef;
+
 }
 
 .right .title {

@@ -1,7 +1,7 @@
 :root {
     --primary-color: #ad7c2a;
     --secondary-color: #ccc;
-    --text-color: #333;
+    --text-color: #5d5858;
     --font-size-base: 18px;
     --left-width: 21.6%;
     --right-width: 78.4%;
@@ -13,10 +13,11 @@
 
 html {
     font-size: var(--font-size-base);
+    background-color: #e6eef1;
+
 }
 
 .contain {
-    border: var(--border-width) solid var(--border-color);
     padding: 1.5rem;
 }
 
@@ -31,6 +32,7 @@ body {
     font-size: 18px;
 
 }
+
 
 .main {
     display: flex;
@@ -83,9 +85,15 @@ body {
 
 .function-item {
     border-bottom: 1px solid var(--secondary-color);
-    padding: 1rem 0;
+    padding: 1rem 2rem;
+    border-left: 4px solid transparent;
+    outline: none; /* Ensures focus state styling */
 }
 
+.function-item:focus,
+.function-item:active {
+    border-left: 4px solid red;
+}
 .function-item h4 {
     margin: 0 0 0.5rem;
     font-size: 1.1rem;
@@ -100,6 +108,7 @@ body {
     flex: 1;
     padding: 1.5rem;
     font-size: 1.1rem;
+    background-color: #f1efef;
 
 }
 .right .filter-container{
