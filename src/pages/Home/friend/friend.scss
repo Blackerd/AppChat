@@ -1,0 +1,64 @@
+.friend{
+  .friendItem{
+    display: flex;
+    flex-direction: column;
+    .item{
+      display: flex;
+      align-items: center;
+        padding: 5px;
+      margin: 5px;
+      background: #C0D6E8;
+      border-radius: 10px;
+      width: 250px;
+      .img{
+        width: 40px;
+        height: 40px;
+        img{
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+        }
+      }
+      .name{
+        flex: 1;
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column;
+        .info{
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin: 0;
+          padding: 0;
+
+        }
+        .text{
+          margin-top: 15px;
+          display: flex;
+        }
+        .unread {
+          background-color: #ff6347;
+          color: white;
+          padding: 2px 8px;
+          border-radius: 12px;
+          font-size: 12px;
+          display: inline-block;
+          margin-left: auto;
+        }
+      }
+      &:hover{
+        background: #03AED2;
+        cursor: pointer;
+        .name{
+          .info{
+            .text{
+              span{
+                color: #ffffff;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

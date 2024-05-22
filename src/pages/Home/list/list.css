@@ -1,0 +1,23 @@
+.list {
+  background: #0E46A3;
+  margin: 10px 10px 10px 5px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.list .chatList {
+  flex: 1;
+  overflow-y: auto;
+}
+.list .chatList::-webkit-scrollbar {
+  display: none;
+}
+.list h1 {
+  margin-top: 30px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+/*# sourceMappingURL=list.css.map */

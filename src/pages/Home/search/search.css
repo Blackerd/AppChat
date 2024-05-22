@@ -1,0 +1,25 @@
+.search {
+  display: flex;
+  align-items: center;
+  padding: 0 10px 5px 5px;
+  margin-top: 30px;
+}
+.search .searchForm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 20px;
+  background: #03AED2;
+  border-radius: 10px;
+  width: 210px;
+}
+.search .searchForm input {
+  width: 100%;
+  padding: 5px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
+/*# sourceMappingURL=search.css.map */
