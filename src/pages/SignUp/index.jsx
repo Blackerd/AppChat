@@ -1,136 +1,114 @@
-import { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-
-import Styles from "./Styles.module.css";
 import classNames from "classnames/bind";
-
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import Styles from "./Styles.module.css";
+import InputComponent from "../../components/input/InputComponent";
+import ButtonComponent from "../../components/button/ButtonComponent";
+import { isEmail, isPassValid, isConfirmPass } from "../../process/checkInput";
 const cx = classNames.bind(Styles);
-function SignUp() {
-  const checkIsEmail = (userName) => {
-    const regex =
-      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    return !(!userName || regex.test(userName) === false);
-  };
-  let navigate = useNavigate();
-
+function Signup() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPass, setConfirmPass] = useState("");
+  const [pass, setPass] = useState("");
+  const [confirm, setCofirm] = useState("");
 
-  const error_email = useRef();
-  const error_pass = useRef();
-  const error_pass_confirm = useRef();
+  const inputEmail = useRef();
+  const inputPass = useRef();
+  const inputConfirm = useRef();
+  const handleEmailOnChange = (e) => {
+    setEmail((prev) => {
+      return e.target.value;
+    });
+  };
+  const handlePassOnChange = (e) => {
+    setPass((prev) => {
+      return e.target.value;
+    });
+  };
 
-  const handleEmail = (e) => {
-    setEmail((prev) => e.target.value);
-  };
-  const handlePassWord = (e) => {
-    setPassword((prev) => e.target.value);
-  };
-  const handleConfirmPass = (e) => {
-    setConfirmPass((prev) => e.target.value);
+  const handleConfirmOnChange = (e) => {
+    setCofirm((prev) => {
+      return e.target.value;
+    });
   };
 
-  const handleOnBlurEmail = () => {
-    const isEmail = checkIsEmail(email);
-    if (!isEmail) {
-      error_email.current.innerText = "Trường này phải là email !";
-    } else {
-      error_email.current.innerText = "";
+  const handleSigninBtn = (e) => {
+    if (!isEmail(email)) {
+      inputEmail.current.setError("Vui lòng nhập đúng email !!");
     }
-  };
-  const handleOnBlurPassWord = () => {
-    const isPassword = password.length >= 6;
-    if (!isPassword) {
-      error_pass.current.innerText = "Mật khẩu phải lớn hơn 6 kí tự !";
-    } else {
-      error_pass.current.innerText = "";
+    if (!isPassValid(pass)) {
+      inputPass.current.setError("Phải có ít nhất 6 kí tự");
     }
-  };
-  const handleOnBlurConfirmPassWord = () => {
-    if (confirmPass && confirmPass !== password) {
-      error_pass_confirm.current.innerText = "Mật khẩu xác thực không đúng !";
-    } else {
-      error_pass_confirm.current.innerText = "";
+    if (!isConfirmPass(confirm, pass)) {
+      inputConfirm.current.setError("Mật khẩu xác thực không đúng !!");
+    }
+    if (isEmail(email) && isPassValid(pass)) {
+      console.log("gui respeut ok !!!!!");
     }
   };
 
   return (
     <>
-      <div className={cx("container")}>
+      <section className={cx("container")}>
         <div className={cx("form-container")}>
           <div className={cx("brand-logo")}></div>
           <div className={cx("brand-title")}>TWITTER</div>
-          <div className={cx("inputs")}>
-            <label htmlFor="email" className={cx("email-label")}>
-              EMAIL
-            </label>
-            <input
-              value={email}
-              onChange={handleEmail}
-              onBlur={handleOnBlurEmail}
+          <form className={cx("inputs")}>
+            <label htmlFor="email">Email</label>
+            <InputComponent
+              typeOf="text"
               id="email"
-              type="email"
-              placeholder="example@test.com"
+              inputValue={email}
+              placeholder="example@gmail.com"
+              onChange={handleEmailOnChange}
+              onBlur={() =>
+                !isEmail(email)
+                  ? inputEmail.current.setError("Vui lòng nhập đúng email .")
+                  : inputEmail.current.setError("")
+              }
+              ref={inputEmail}
             />
-            <div ref={error_email} className={cx("error-email")}></div>
-            <label htmlFor="password" className={cx("password-text")}>
-              PASSWORD
-            </label>
-            <input
-              value={password}
-              onChange={handlePassWord}
-              onBlur={handleOnBlurPassWord}
+            <label htmlFor="password">Password</label>
+            <InputComponent
+              typeOf="password"
               id="password"
-              type="password"
-              placeholder="Min 6 charaters long"
+              inputValue={pass}
+              placeholder="The PassWord must At least has 6 letter ."
+              onChange={handlePassOnChange}
+              onBlur={() =>
+                !isPassValid(pass)
+                  ? inputPass.current.setError("Ít nhất phải có 6 kí tự .")
+                  : inputPass.current.setError("")
+              }
+              ref={inputPass}
             />
-            <div ref={error_pass} className={cx("error-pass")}>
-              {" "}
-            </div>
-            <label htmlFor="confirmPass" className={cx("password-text")}>
-              Confirm Password
-            </label>
-            <input
-              value={confirmPass}
-              onChange={handleConfirmPass}
-              onBlur={handleOnBlurConfirmPassWord}
-              id="confirmPass"
-              type="password"
-              placeholder="Min 6 charaters long"
+            <label htmlFor="password">Confirm PassWord</label>
+            <InputComponent
+              typeOf="password"
+              id="password"
+              inputValue={confirm}
+              placeholder="Confirm your Password ."
+              onChange={handleConfirmOnChange}
+              onBlur={() =>
+                !isConfirmPass(confirm, pass)
+                  ? inputConfirm.current.setError(
+                      "Mật khâu xác thực không đúng !"
+                    )
+                  : inputConfirm.current.setError("")
+              }
+              ref={inputConfirm}
             />
-            <div
-              ref={error_pass_confirm}
-              className={cx("error-pass-confirm")}
-            ></div>
-            <button
-              className={cx("signupBtn")}
-              onClick={() => {
-                if (
-                  checkIsEmail(email) &&
-                  password.length >= 6 &&
-                  confirmPass === password
-                ) {
-                  navigate(-1);
-                } else {
-                  error_pass_confirm.current.innerText =
-                    "Mật khẩu xác thực không đúng !";
-                  error_pass.current.innerText =
-                    "Mật khẩu phải lớn hơn 6 kí tự !";
-                  error_email.current.innerText = "Trường này phải là email !";
-                }
-              }}
-            >
-              Sign Up
-            </button>
-            <Link to={`/`} className={cx("hasAccount")}>
-              Already have an account? Login
-            </Link>
-          </div>
+          </form>
+          <ButtonComponent title="Sign Up" onClick={handleSigninBtn} />
+          <Link className={cx("link")} to="/">
+            Did you have an account? Sign in
+          </Link>
         </div>
-      </div>
+      </section>
     </>
   );
 }
+// const query = useQuery();
+// const searchQuery = query.get("a");
+// console.log(typeof searchQuery);
 
-export default SignUp;
+export default Signup;
