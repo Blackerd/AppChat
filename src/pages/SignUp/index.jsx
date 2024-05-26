@@ -1,48 +1,70 @@
 import classNames from "classnames/bind";
-import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState, useContext } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Styles from "./Styles.module.css";
 import InputComponent from "../../components/input/InputComponent";
 import ButtonComponent from "../../components/button/ButtonComponent";
 import { isEmail, isPassValid, isConfirmPass } from "../../process/checkInput";
+import { login as auth } from "../../store/userSlice";
+import { useDispatch } from "react-redux";
+import { WebsocketContext } from "../../socket/WebsocketContent";
+import { REGISTER } from "../../api/action";
+//
+// gửi email và pass đi với REGISTER
+// ở trạng thái chờ phản hồi
+// khi nhận phản hồi thì kiểm tra phản hồi
+
+//
 const cx = classNames.bind(Styles);
 function Signup() {
-  const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
-  const [confirm, setCofirm] = useState("");
+  const inputEmail = useRef(); // trường input email show lỗi
+  const inputPass = useRef(); // trường input pass show lỗi
+  const inputConfirm = useRef(); // trường input confirm show lỗi
+  const nav = useNavigate();
+  const dispatch = useDispatch();
+  // //
+  const [isREady, respone, sender] = useContext(WebsocketContext);
 
-  const inputEmail = useRef();
-  const inputPass = useRef();
-  const inputConfirm = useRef();
-  const handleEmailOnChange = (e) => {
-    setEmail((prev) => {
-      return e.target.value;
-    });
-  };
-  const handlePassOnChange = (e) => {
-    setPass((prev) => {
-      return e.target.value;
-    });
-  };
+  // console.log(respone);
+  // lúa này respone gửi về có 2 dạng
+  // 1 nếu thành công
+  // {event: 'REGISTER', status: 'success', data: 'Creating a successful account'}
+  // 2 nếu trùng email user
+  // {event: 'REGISTER', status: 'error', mes: 'Creating account error, Duplicate Username'}
 
-  const handleConfirmOnChange = (e) => {
-    setCofirm((prev) => {
-      return e.target.value;
-    });
+  useEffect(() => {
+    if (respone) {
+      if (respone.status === "success") {
+        respone.status = "";
+        nav("/");
+      } else if (respone.status === "error") {
+        inputEmail.current.setError("Tài khoản đã tồn tại !!");
+      }
+    }
+  }, [respone]);
+
+  const [form, setForm] = useState({ email: "", password: "", confirm: "" });
+  const handleOnChange = (e) => {
+    setForm((prev) => ({
+      ...form,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleSigninBtn = (e) => {
-    if (!isEmail(email)) {
+    if (!isEmail(form.email)) {
       inputEmail.current.setError("Vui lòng nhập đúng email !!");
     }
-    if (!isPassValid(pass)) {
+    if (!isPassValid(form.password)) {
       inputPass.current.setError("Phải có ít nhất 6 kí tự");
     }
-    if (!isConfirmPass(confirm, pass)) {
+    if (!isConfirmPass(form.confirm, form.password)) {
       inputConfirm.current.setError("Mật khẩu xác thực không đúng !!");
+      return;
     }
-    if (isEmail(email) && isPassValid(pass)) {
-      console.log("gui respeut ok !!!!!");
+    if (isEmail(form.email) && isPassValid(form.password)) {
+      const register = REGISTER(form.email, form.password);
+      sender(register, true);
     }
   };
 
@@ -55,13 +77,12 @@ function Signup() {
           <form className={cx("inputs")}>
             <label htmlFor="email">Email</label>
             <InputComponent
-              typeOf="text"
-              id="email"
-              inputValue={email}
+              name="email"
+              inputValue={form.email}
               placeholder="example@gmail.com"
-              onChange={handleEmailOnChange}
+              onChange={handleOnChange}
               onBlur={() =>
-                !isEmail(email)
+                !isEmail(form.email)
                   ? inputEmail.current.setError("Vui lòng nhập đúng email .")
                   : inputEmail.current.setError("")
               }
@@ -69,13 +90,12 @@ function Signup() {
             />
             <label htmlFor="password">Password</label>
             <InputComponent
-              typeOf="password"
-              id="password"
-              inputValue={pass}
+              name="password"
+              inputValue={form.password}
               placeholder="The PassWord must At least has 6 letter ."
-              onChange={handlePassOnChange}
+              onChange={handleOnChange}
               onBlur={() =>
-                !isPassValid(pass)
+                !isPassValid(form.password)
                   ? inputPass.current.setError("Ít nhất phải có 6 kí tự .")
                   : inputPass.current.setError("")
               }
@@ -83,13 +103,13 @@ function Signup() {
             />
             <label htmlFor="password">Confirm PassWord</label>
             <InputComponent
-              typeOf="password"
-              id="password"
-              inputValue={confirm}
+              name="confirm"
+              type="password"
+              inputValue={form.confirm}
               placeholder="Confirm your Password ."
-              onChange={handleConfirmOnChange}
+              onChange={handleOnChange}
               onBlur={() =>
-                !isConfirmPass(confirm, pass)
+                !isConfirmPass(form.confirm, form.password)
                   ? inputConfirm.current.setError(
                       "Mật khâu xác thực không đúng !"
                     )
@@ -107,8 +127,5 @@ function Signup() {
     </>
   );
 }
-// const query = useQuery();
-// const searchQuery = query.get("a");
-// console.log(typeof searchQuery);
 
 export default Signup;
