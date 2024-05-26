@@ -4,12 +4,17 @@ const REGISTER = (user, pass) => {
     data: {
       event: "REGISTER",
       data: {
-        user: user,
-        pass: pass,
+        user,
+        pass,
       },
     },
   };
 };
+// lúa này respone gửi về có 2 dạng
+// 1 nếu thành công
+// {event: 'REGISTER', status: 'success', data: 'Creating a successful account'}
+// 2 nếu trùng email user
+// {event: 'REGISTER', status: 'error', mes: 'Creating account error, Duplicate Username'}
 const Login = (user, pass) => {
   return {
     action: "onchat",
@@ -22,6 +27,13 @@ const Login = (user, pass) => {
     },
   };
 };
+// lúa này respone gửi về có 3 dạng
+// 1 nếu thành công
+// {event: 'LOGIN', status: 'success', data: {RE_LOGIN_CODE: 'nlu_1796764489'}}
+// 2 nếu trùng email user
+// {event: 'LOGIN', status: 'error', mes: 'Login error, Wrong Username or Password'}
+// 3 nếu nhấn quá nhiều
+// {event: 'LOGIN', status: 'error', mes: 'You are already logged in'}
 const RE_LOGIN = (user) => {
   return {
     action: "onchat",
@@ -88,6 +100,7 @@ const GET_PEOPLE_CHAT_MES = (namePeople) => {
     },
   };
 };
+// {event: 'GET_PEOPLE_CHAT_MES', status: 'error', mes: 'User not exist or page parameter error!'}
 const SEND_CHAT_TO_ROOM = (nameRoom, mess) => {
   return {
     action: "onchat",
@@ -114,6 +127,10 @@ const SEND_CHAT = (people, mess) => {
     },
   };
 };
+// success
+// {event: 'SEND_CHAT', status: 'success', data: {id: 0, name: 'from', type: 0, to: 'to', mes: 'ddddddd'}}
+// fail
+// {event: 'AUTH', status: 'error', mes: 'User not Login'}
 const CHECK_USER = (userName) => {
   return {
     action: "onchat",
@@ -133,6 +150,10 @@ const GET_USER_LIST = () => {
     },
   };
 };
+// {event: 'GET_USER_LIST', status: 'success', data: Array(2) [{...},{...}]}
+// 0: {name: 'ak@gmail.com', type: 0, actionTime: '2024-05-26 07:38:25'}
+// 1: {name: 'ka@gmail.com', type: 0, actionTime: '2024-05-26 07:38:17'}
+
 export {
   REGISTER,
   Login,

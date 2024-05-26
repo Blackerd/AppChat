@@ -1,28 +1,55 @@
 import classNames from "classnames/bind";
-
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setFriends, setName } from "../../store/userSlice";
 //
-import useSocket from "../../hooks/useSocket";
-import { Login } from "../../api/action";
-//
-
 import Styles from "./styles.module.css";
 import InputComponent from "../../components/input/InputComponent";
 import ButtonComponent from "../../components/button/ButtonComponent";
 import { isEmail, isPassValid } from "../../process/checkInput";
 import { useNavigate } from "react-router-dom";
+import { GET_USER_LIST, Login } from "../../api/action";
+import { WebsocketContext } from "../../socket/WebsocketContent";
+
+// gửi email và pass đi với Login
+// ở trạng thái chờ phản hồi
+// khi nhận phản hồi thì kiểm tra phản hồi
 const cx = classNames.bind(Styles);
 function LogIn() {
+  const inputEmail = useRef(); // trường input email show lỗi
+  const inputPass = useRef(); // trường input pass show lỗi
+
   const nav = useNavigate();
-  //
-  const { sender, lastJsonMessage, all } = useSocket();
+  const dispatch = useDispatch();
+
+  const [isReady, respone, sender] = useContext(WebsocketContext);
+
+  // const [allVal, setAllVal] = useState(respone);
+  // console.log(allVal);
+  // lúa này respone gửi về có 2 dạng
+  // 1 nếu thành công
+  // {event: 'LOGIN', status: 'success', data: {RE_LOGIN_CODE: 'nlu_1796764489'}}
+  // 2 nếu trùng email user
+  // {event: 'LOGIN', status: 'error', mes: 'Login error, Wrong Username or Password'}
+  // 3 nếu nhấn quá nhiều
+  // {event: 'LOGIN', status: 'error', mes: 'You are already logged in'}
   useEffect(() => {
-    if (lastJsonMessage) {
-      console.log(lastJsonMessage);
-      nav("/home");
+    if (respone) {
+      if (respone.status === "success") {
+        dispatch(setName(form.email));
+        const get_user_list = GET_USER_LIST();
+        sender(get_user_list);
+        nav("/home");
+      } else if (respone.status === "error") {
+        if (respone.mes === "Login error, Wrong Username or Password") {
+          inputEmail.current.setError("Email hoặc password không đúng");
+        } else {
+          inputEmail.current.setError("You are already logged in");
+        }
+      }
     }
-  }, [lastJsonMessage]);
-  //
+  }, [respone]);
+
   const [form, setForm] = useState({ email: "", password: "" });
   const handleOnChange = (e) => {
     setForm((pre) => ({
@@ -30,8 +57,6 @@ function LogIn() {
       [e.target.name]: e.target.value,
     }));
   };
-  const inputEmail = useRef();
-  const inputPass = useRef();
 
   const handleLoginBtn = () => {
     if (!isEmail(form.email)) {
@@ -41,9 +66,8 @@ function LogIn() {
       inputPass.current.setError("Phải có ít nhất 6 kí tự");
     }
     if (isEmail(form.email) && isPassValid(form.password)) {
-      // const data = { email: form.email, password: form.password };
-
-      sender(Login(form.email, form.password), true);
+      const login = Login(form.email, form.password);
+      sender(login, true);
     }
   };
   return (

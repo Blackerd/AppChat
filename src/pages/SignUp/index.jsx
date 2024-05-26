@@ -1,15 +1,48 @@
 import classNames from "classnames/bind";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Styles from "./Styles.module.css";
 import InputComponent from "../../components/input/InputComponent";
 import ButtonComponent from "../../components/button/ButtonComponent";
 import { isEmail, isPassValid, isConfirmPass } from "../../process/checkInput";
-//
+import { login as auth } from "../../store/userSlice";
+import { useDispatch } from "react-redux";
+import { WebsocketContext } from "../../socket/WebsocketContent";
 import { REGISTER } from "../../api/action";
+//
+// gửi email và pass đi với REGISTER
+// ở trạng thái chờ phản hồi
+// khi nhận phản hồi thì kiểm tra phản hồi
+
 //
 const cx = classNames.bind(Styles);
 function Signup() {
+  const inputEmail = useRef(); // trường input email show lỗi
+  const inputPass = useRef(); // trường input pass show lỗi
+  const inputConfirm = useRef(); // trường input confirm show lỗi
+  const nav = useNavigate();
+  const dispatch = useDispatch();
+  // //
+  const [isREady, respone, sender] = useContext(WebsocketContext);
+
+  // console.log(respone);
+  // lúa này respone gửi về có 2 dạng
+  // 1 nếu thành công
+  // {event: 'REGISTER', status: 'success', data: 'Creating a successful account'}
+  // 2 nếu trùng email user
+  // {event: 'REGISTER', status: 'error', mes: 'Creating account error, Duplicate Username'}
+
+  useEffect(() => {
+    if (respone) {
+      if (respone.status === "success") {
+        respone.status = "";
+        nav("/");
+      } else if (respone.status === "error") {
+        inputEmail.current.setError("Tài khoản đã tồn tại !!");
+      }
+    }
+  }, [respone]);
+
   const [form, setForm] = useState({ email: "", password: "", confirm: "" });
   const handleOnChange = (e) => {
     setForm((prev) => ({
@@ -17,10 +50,6 @@ function Signup() {
       [e.target.name]: e.target.value,
     }));
   };
-
-  const inputEmail = useRef();
-  const inputPass = useRef();
-  const inputConfirm = useRef();
 
   const handleSigninBtn = (e) => {
     if (!isEmail(form.email)) {
@@ -34,7 +63,8 @@ function Signup() {
       return;
     }
     if (isEmail(form.email) && isPassValid(form.password)) {
-      console.log("gui respeut ok !!!!!");
+      const register = REGISTER(form.email, form.password);
+      sender(register, true);
     }
   };
 

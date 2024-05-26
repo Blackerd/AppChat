@@ -5,6 +5,7 @@ import {
   redirect,
 } from "react-router-dom";
 import { publicRoutes, privateRoutes } from "./routes";
+
 function App() {
   return (
     <Router>
