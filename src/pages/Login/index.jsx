@@ -1,7 +1,7 @@
 import classNames from "classnames/bind";
 import { useEffect, useRef, useState, useCallback, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFriends, setName } from "../../store/userSlice";
+import { setFriends, setName, setEmail } from "../../store/userSlice";
 //
 import Styles from "./styles.module.css";
 import InputComponent from "../../components/input/InputComponent";
@@ -36,7 +36,9 @@ function LogIn() {
   useEffect(() => {
     if (respone) {
       if (respone.status === "success") {
-        dispatch(setName(form.email));
+        let name = form.email.split("@")[0];
+        dispatch(setName(name));
+        dispatch(setEmail(form.email));
         const get_user_list = GET_USER_LIST();
         sender(get_user_list);
         nav("/home");

@@ -65,6 +65,14 @@ const CREATE_ROOM = (nameRoom) => {
     },
   };
 };
+// type = 1 la group
+// => When CREATE_ROOM is success
+// =>{event: 'CREATE_ROOM', status: 'success', data: {…}}
+// data: {id: 1483, name: 'HauVaNhungNguoiBan', own: 'doxuanhau@gmail.com', userList: Array(0), chatData: Array(0)}
+// event: "CREATE_ROOM"
+// status: "success"
+// => when CREATE_ROOM is fail
+// {event: 'CREATE_ROOM', status: 'error', mes: 'Room Exist'}
 const JOIN_ROOM = (nameRoom) => {
   return {
     action: "onchat",
@@ -100,6 +108,14 @@ const GET_PEOPLE_CHAT_MES = (namePeople) => {
     },
   };
 };
+//{event: 'GET_PEOPLE_CHAT_MES', status: 'success', data: Array(50)}
+// 0:createAt:"2024-06-15 14:51:56"
+// id:31735
+// mes:"asdasdasdasdasdasdasdas"
+// name:"doxuanhau@gmail.com"
+// to"jack@gmail.com"
+// type:0
+
 // {event: 'GET_PEOPLE_CHAT_MES', status: 'error', mes: 'User not exist or page parameter error!'}
 const SEND_CHAT_TO_ROOM = (nameRoom, mess) => {
   return {
@@ -127,6 +143,7 @@ const SEND_CHAT = (people, mess) => {
     },
   };
 };
+// type = 0 la user
 // success
 // {event: 'SEND_CHAT', status: 'success', data: {id: 0, name: 'from', type: 0, to: 'to', mes: 'ddddddd'}}
 // fail
