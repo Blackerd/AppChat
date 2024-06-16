@@ -84,6 +84,22 @@ const JOIN_ROOM = (nameRoom) => {
     },
   };
 };
+// data:
+// chatData: []
+// id: 1496
+// name: "thehostspot"
+// own: "doxuanhau@gmail.com"
+// userList: Array(1)
+// 0: {id: 2757, name: 'jack@gmail.com'}
+// length: 1
+// [[Prototype]]: Array(0)
+// [[Prototype]]: Object
+// event: "JOIN_ROOM"
+// status: "success"
+// == > error
+// event: "JOIN_ROOM";
+// mes: "Room not found";
+// status: "error";
 const GET_ROOM_CHAT_MES = (nameRoom) => {
   return {
     action: "onchat",
@@ -96,6 +112,22 @@ const GET_ROOM_CHAT_MES = (nameRoom) => {
     },
   };
 };
+// sucucess
+// data:
+// chatData: Array(5)
+// 0:{id: 31810, name: 'doxuanhau@gmail.com', type: 1, to: 'hauvanhungnguoiban@gmail.com', mes: 'asdasdasdasd', yype:1}
+// 1:{id: 31809, name: 'doxuanhau@gmail.com', type: 1, to: 'hauvanhungnguoiban@gmail.com', mes: 'asdasdasdasdasdasdasd', …}
+// 2:{id: 31807, name: 'doxuanhau@gmail.com', type: 1, to: 'hauvanhungnguoiban@gmail.com', mes: 'asdasdasd', …}
+// 3:{id: 31806, name: 'doxuanhau@gmail.com', type: 1, to: 'hauvanhungnguoiban@gmail.com', mes: '123123123123123123123123123', …}
+// 4:{id: 31805, name: 'doxuanhau@gmail.com', type: 1, to: 'hauvanhungnguoiban@gmail.com', mes: '12312312312312312323', …}
+// length:5
+// [[Prototype]]
+// :Array(0)
+// id:1481
+// name:"hauvanhungnguoiban@gmail.com"
+// own:"doxuanhau@gmail.com"
+// userList:[]
+
 const GET_PEOPLE_CHAT_MES = (namePeople) => {
   return {
     action: "onchat",
@@ -159,6 +191,7 @@ const CHECK_USER = (userName) => {
     },
   };
 };
+//== > is online or not
 const GET_USER_LIST = () => {
   return {
     action: "onchat",

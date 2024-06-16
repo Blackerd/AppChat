@@ -1,7 +1,7 @@
 import React from "react";
 import "./message.css";
 
-const Message = ({ text, isSentByUser, key }) => {
+const Message = ({ text, isSentByUser }) => {
   return (
     <div className={`message ${isSentByUser ? "user" : "friend"}`}>{text}</div>
   );
