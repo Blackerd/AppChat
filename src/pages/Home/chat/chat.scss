@@ -91,9 +91,10 @@
         background: #C0D6E8;
         border-radius: 10px;
         margin: 5px;
+        justify-content: space-between;
         .input{
             background: none;
-
+            height: 80%;
         }
         .sendItem{
             display: flex;
