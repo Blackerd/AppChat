@@ -28,18 +28,13 @@ const userSlice = createSlice({
       state.status = "Auth";
     },
     saveMessage: (state, action) => {
-      state.infor = {
-        ...state.infor,
-        friends: state.infor.friends.map((f) => {
-          if (f.name === action.payload.name) {
-            return {
-              ...f,
-              listmessage: [...f.listmessage, action.payload.mess],
-            };
-          }
-          return f;
-        }),
-      };
+      const { name, mess } = action.payload;
+      const friendIndex = state.infor.friends.findIndex(f => f.name === name);
+      if (friendIndex !== -1) {
+        const friend = state.infor.friends[friendIndex];
+        friend.messages = friend.messages ? [...friend.messages, mess] : [mess];
+        state.infor.friends[friendIndex] = { ...friend };
+      }
     },
 
     clearMessage: (state, action) => {
@@ -67,18 +62,13 @@ const userSlice = createSlice({
       state.status = "Auth";
     },
     saveGroupMess: (state, action) => {
-      state.infor = {
-        ...state.infor,
-        groups: state.infor.groups.map((item) => {
-          if (item.nameGroup === action.payload.nameGroup) {
-            return {
-              ...item,
-              listmessage: [...item.listmessage, action.payload.messGroup],
-            };
-          }
-          return item;
-        }),
-      };
+      const { nameGroup, messGroup } = action.payload;
+      const groupIndex = state.infor.groups.findIndex(g => g.nameGroup === nameGroup);
+      if (groupIndex !== -1) {
+        const group = state.infor.groups[groupIndex];
+        group.messages = group.messages ? [...group.messages, messGroup] : [messGroup];
+        state.infor.groups[groupIndex] = { ...group };
+      }
     },
     clearGroupMess: (state, action) => {
       state.infor = {

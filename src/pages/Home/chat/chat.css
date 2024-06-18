@@ -5,10 +5,6 @@
   display: grid;
   grid-template-rows: 1fr 6fr 1fr;
 }
-.chatContainer .header {
-  max-height: 100px;
-  background-color: #007bff;
-}
 .chatContainer .header .item {
   display: flex;
   align-items: center;
@@ -81,14 +77,13 @@
   gap: 5px;
   padding: 5px;
   align-items: center;
+  justify-content: space-between;
   background: #c0d6e8;
   border-radius: 10px;
   margin: 5px;
-  justify-content: space-between;
 }
 .chatContainer .footer .input {
   background: none;
-  height: 80%;
 }
 .chatContainer .footer .sendItem {
   display: flex;
@@ -104,6 +99,17 @@
 }
 .chatContainer .footer .sendItem .send {
   display: flex;
+  gap: 5px;
+  padding: 5px;
+  align-items: center;
+  background: #C0D6E8;
+  border-radius: 10px;
+  margin: 5px;
+  justify-content: space-between;
+}
+.chatContainer .footer .sendItem .send .input {
+  background: none;
+  height: 80%;
   background: #1c1678;
   padding: 6px;
   border-radius: 3px;
@@ -111,10 +117,10 @@
   gap: 3px;
   cursor: pointer;
 }
-.chatContainer .footer .sendItem .send .icon {
+.chatContainer .footer .sendItem .send .input .icon {
   margin-top: 2px;
 }
-.chatContainer .footer .sendItem .send:hover {
+.chatContainer .footer .sendItem .send .input:hover {
   background: #03aed2;
 }
 

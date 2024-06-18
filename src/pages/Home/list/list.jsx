@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import Search from "../search/search";
 import Friend from "../friend/friend";
 import "./list.css";
@@ -9,6 +9,8 @@ import {
   clearGroupMess,
   clearMessage,
   setGroups,
+  saveMessage,
+  saveGroupMess,
 } from "../../../store/userSlice";
 
 const List = (props) => {
@@ -18,6 +20,28 @@ const List = (props) => {
   const friends = infor.user.infor.friends;
   const groups = infor.user.infor.groups;
   const all = [...friends, ...groups];
+
+  useEffect(() => {
+    if (respone) {
+      if (respone.status === "success") {
+        if (respone.event === "GET_PEOPLE_CHAT_MES") {
+          const data = respone.data;
+          data.forEach((item) => {
+            const { name, to, mes } = item;
+            const isSentByUser = name === infor.user.infor.email;
+            dispatch(saveMessage({ name: isSentByUser ? to : name, mess: { text: mes, isSentByUser } }));
+          });
+        } else if (respone.event === "GET_ROOM_CHAT_MES") {
+          const data = respone.data.chatData;
+          data.forEach((item) => {
+            const { name, mes } = item;
+            const isSentByUser = name === infor.user.infor.email;
+            dispatch(saveGroupMess({ nameGroup: respone.data.name, messGroup: { text: mes, isSentByUser } }));
+          });
+        }
+      }
+    }
+  }, [respone]);
 
   const handleFriendClick = (item) => {
     if (item.type === 0) {
@@ -31,25 +55,35 @@ const List = (props) => {
     }
     props.setChatUser(item);
   };
+
+  // Lọc và nhóm tin nhắn theo người nhận
+  const filteredList = {};
+
+  all.forEach((item) => {
+    const key = item.nameGroup || item.name;
+    if (!filteredList[key]) {
+      filteredList[key] = item;
+    }
+  });
+
   return (
-    <div className="list">
-      <h1>Chat</h1>
-      <Search />
-      <div className="chatList">
-        {all &&
-          all.map((item) => (
-            <Friend
-              key={item.name}
-              img={item.img}
-              name={item.nameGroup || item.name}
-              time={item.time}
-              message={item.message}
-              unread={item.unread}
-              onClick={() => handleFriendClick(item)}
-            />
+      <div className="list">
+        <h1>Chat</h1>
+        <Search />
+        <div className="chatList">
+          {Object.values(filteredList).map((item) => (
+              <Friend
+                  key={item.nameGroup || item.name}
+                  img={item.img}
+                  name={item.nameGroup || item.name}
+                  time={item.time}
+                  message={item.message}
+                  unread={item.unread}
+                  onClick={() => handleFriendClick(item)}
+              />
           ))}
+        </div>
       </div>
-    </div>
   );
 };
 

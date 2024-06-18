@@ -46,14 +46,14 @@ const RE_LOGIN = (user) => {
     },
   };
 };
-const Logout = () => {
-  return {
-    action: "onchat",
-    data: {
-      event: "LOGOUT",
-    },
+  const Logout = () => {
+    return {
+      action: "onchat",
+      data: {
+        event: "LOGOUT",
+      },
+    };
   };
-};
 const CREATE_ROOM = (nameRoom) => {
   return {
     action: "onchat",
