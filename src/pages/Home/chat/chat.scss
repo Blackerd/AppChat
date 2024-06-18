@@ -104,6 +104,16 @@
       }
       .send {
         display: flex;
+        gap: 5px;
+        padding: 5px;
+        align-items: center;
+        background: #C0D6E8;
+        border-radius: 10px;
+        margin: 5px;
+        justify-content: space-between;
+        .input{
+            background: none;
+            height: 80%;
         background: #1c1678;
         padding: 6px;
         border-radius: 3px;

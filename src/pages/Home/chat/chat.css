@@ -84,9 +84,11 @@
   background: #c0d6e8;
   border-radius: 10px;
   margin: 5px;
+  justify-content: space-between;
 }
 .chatContainer .footer .input {
   background: none;
+  height: 80%;
 }
 .chatContainer .footer .sendItem {
   display: flex;
