@@ -24,9 +24,10 @@ function InputComponent(props, ref) {
   return (
     <>
       <input
-        id={props.id}
+        name={props.name}
+        id={props.name}
         value={props.inputValue}
-        type={props.typeOf}
+        type={props.type || props.name}
         className={cx("textInput")}
         placeholder={props.placeholder}
         onChange={props.onChange}
