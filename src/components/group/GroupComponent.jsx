@@ -13,7 +13,7 @@ import { WebsocketContext } from "../../socket/WebsocketContent";
 import { SEND_CHAT_TO_ROOM, GET_ROOM_CHAT_MES } from "../../api/action";
 import { useDispatch, useSelector } from "react-redux";
 import { saveGroupMess } from "../../store/userSlice";
-import Styles from "./styles.module.css";
+import Styles from "./styles.module.scss";
 import classNames from "classnames/bind";
 
 const cx = classNames.bind(Styles);

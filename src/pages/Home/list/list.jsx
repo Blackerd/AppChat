@@ -10,6 +10,7 @@ import {
   clearMessage,
   setGroups,
 } from "../../../store/userSlice";
+import ShowGroup from "../../../components/group/showgroup/GroupShow";
 
 const List = (props) => {
   const [isReady, respone, sender] = useContext(WebsocketContext);
@@ -19,7 +20,7 @@ const List = (props) => {
   const groups = infor.user.infor.groups;
   const all = [...friends, ...groups];
 
-  const handleFriendClick = (item) => {
+  const handleItemOnClick = (item) => {
     if (item.type === 0) {
       dispatch(clearMessage({ name: item.name }));
       const get_people_chat_mess = GET_PEOPLE_CHAT_MES(item.name);
@@ -37,17 +38,24 @@ const List = (props) => {
       <Search />
       <div className="chatList">
         {all &&
-          all.map((item) => (
-            <Friend
-              key={item.name}
-              img={item.img}
-              name={item.nameGroup || item.name}
-              time={item.time}
-              message={item.message}
-              unread={item.unread}
-              onClick={() => handleFriendClick(item)}
-            />
-          ))}
+          all.map((item) => {
+            return item.type === 0 ? (
+              <Friend
+                key={item.name}
+                img={item.img}
+                name={item.nameGroup || item.name}
+                time={item.time}
+                message={item.message}
+                unread={item.unread}
+                onClick={() => handleItemOnClick(item)}
+              />
+            ) : (
+              <ShowGroup
+                nameGroup={item.nameGroup}
+                onClick={() => handleItemOnClick(item)}
+              />
+            );
+          })}
       </div>
     </div>
   );
