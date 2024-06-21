@@ -10,6 +10,7 @@ import { isEmail, isPassValid } from "../../process/checkInput";
 import { useNavigate } from "react-router-dom";
 import { GET_USER_LIST, Login } from "../../api/action";
 import { WebsocketContext } from "../../socket/WebsocketContent";
+import useFirebase from "../../firebaseSocket/Firebase";
 
 // gửi email và pass đi với Login
 // ở trạng thái chờ phản hồi
@@ -21,6 +22,7 @@ function LogIn() {
 
   const nav = useNavigate();
   const dispatch = useDispatch();
+  const firebase = useFirebase();
 
   const [isReady, respone, sender] = useContext(WebsocketContext);
 

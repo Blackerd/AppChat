@@ -15,7 +15,6 @@ function Home() {
   const dispatch = useDispatch();
   const infor = useSelector((state) => state.reducer);
   const [name, setName] = useState("");
-  console.log(respone);
   useEffect(() => {
     // setName
     setName(infor.user.infor.name);

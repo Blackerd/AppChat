@@ -51,6 +51,7 @@ const List = (props) => {
               />
             ) : (
               <ShowGroup
+                key={item.nameGroup}
                 nameGroup={item.nameGroup}
                 onClick={() => handleItemOnClick(item)}
               />
