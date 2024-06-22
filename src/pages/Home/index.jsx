@@ -9,7 +9,6 @@ import { logout, setFriends, setGroups } from "../../store/userSlice";
 import { RE_LOGIN, GET_PEOPLE_CHAT_MES } from "../../api/action";
 import GroupComponent from "../../components/group/GroupComponent";
 function Home() {
-  //
   const [isReady, respone, sender] = useContext(WebsocketContext);
   // ==> ko được xóa
   const dispatch = useDispatch();
@@ -18,7 +17,6 @@ function Home() {
   useEffect(() => {
     // setName
     setName(infor.user.infor.name);
-    //
     if (respone) {
       if (respone.status === "success") {
         if (respone.event === "GET_USER_LIST") {
@@ -59,9 +57,7 @@ function Home() {
    *không được xóa dòng trên !!!! ==>
    */
 
-  //
   const [selected, setSelected] = useState(null);
-  //
   return (
     <div className="container">
       <Menu name={name}></Menu>
