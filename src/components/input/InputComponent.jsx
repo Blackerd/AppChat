@@ -10,7 +10,6 @@ function InputComponent(props, ref) {
   const [isShake, SetisSHake] = useState(false);
   useImperativeHandle(ref, () => ({
     setError(error) {
-      console.log(error);
       if (error) {
         errorE.current.innerText = error;
         SetisSHake(!isShake);

@@ -47,8 +47,25 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-weight: 500;
+  font-family: sans-serif;
+  color: #087a69;
   margin: 0;
   padding: 0;
+}
+.messageimg {
+  max-width: 30%;
+  height: auto;
+  background: white;
+  margin: 0px 0px 0px 10rem;
+  object-fit: contain;
+  transition: all 2s ease-in-out;
+}
+.userimg {
+  align-self: flex-end;
+}
+.friendimg {
+  align-self: flex-start;
 }
 .chatContainer .header .item .name .info span {
   margin-right: 5px;
@@ -74,6 +91,7 @@
   display: flex;
   flex-direction: column;
   background: #ecf0f3;
+  transition: all 2s ease-in-out;
 }
 .message {
   padding: 10px;
@@ -82,6 +100,10 @@
   max-width: 50%;
   font-size: 2rem;
   font-style: oblique;
+  word-wrap: break-word;
+  white-space: normal;
+  text-overflow: ellipsis;
+  transition: all 2s ease-in-out;
 }
 .friend {
   background-color: #1c1678;
@@ -139,4 +161,15 @@
 }
 .footer .sendItem .send:hover {
   background: #03aed2;
+}
+.inputfile {
+  display: none;
+}
+.previewimg {
+  max-width: 20%;
+  height: auto;
+  background: white;
+  margin: 0px 0px 0px 10rem;
+  object-fit: contain;
+  transition: all 2s ease-in-out;
 }

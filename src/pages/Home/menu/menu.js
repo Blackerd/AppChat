@@ -1,6 +1,10 @@
 import React, { useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRightFromBracket, faGear, faMessage } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRightFromBracket,
+  faGear,
+  faMessage,
+} from "@fortawesome/free-solid-svg-icons";
 import { Logout } from "../../../api/action";
 import { WebsocketContext } from "../../../socket/WebsocketContent";
 import "./menu.css";
@@ -13,39 +17,42 @@ const Menu = (props) => {
     sendJsonMessage(logoutAction); // Gửi yêu cầu đăng xuất qua WebSocket
 
     //  chuyển hướng về trang đăng nhập
-    window.location.href = '/';
+    window.location.href = "/";
   };
 
   return (
-      <aside id="aside">
+    <aside id="aside">
+      <div className="menu">
+        <div className="img">
+          <img
+            src="https://www.w3schools.com/howto/img_avatar.png"
+            alt="avatar"
+          />
+        </div>
         <div className="menu">
-          <div className="img">
-            <img src="https://www.w3schools.com/howto/img_avatar.png" alt="avatar" />
-          </div>
-          <div className="menu">
-            <div className="menuItem">
-              <div className="item">
-                <div className="icon">
-                  <FontAwesomeIcon icon={faMessage} />
-                </div>
-                <span>{props.name}</span>
+          <div className="menuItem">
+            <div className="item">
+              <div className="icon">
+                <FontAwesomeIcon icon={faMessage} />
               </div>
-              <div className="item">
-                <div className="icon">
-                  <FontAwesomeIcon icon={faGear} />
-                </div>
-                <span>Setting</span>
+              <span>{props.name}</span>
+            </div>
+            <div className="item">
+              <div className="icon">
+                <FontAwesomeIcon icon={faGear} />
               </div>
-              <div className="logOut" onClick={handleLogout}>
-                <div className="icon">
-                  <FontAwesomeIcon icon={faArrowRightFromBracket} />
-                </div>
-                <span>LogOut</span>
+              <span>Setting</span>
+            </div>
+            <div className="logOut" onClick={handleLogout}>
+              <div className="icon">
+                <FontAwesomeIcon icon={faArrowRightFromBracket} />
               </div>
+              <span>LogOut</span>
             </div>
           </div>
         </div>
-      </aside>
+      </div>
+    </aside>
   );
 };
 

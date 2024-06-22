@@ -12,6 +12,7 @@ import {
   saveMessage,
   saveGroupMess,
 } from "../../../store/userSlice";
+import ShowGroup from "../../../components/group/showgroup/GroupShow";
 
 const List = (props) => {
   const [isReady, respone, sender] = useContext(WebsocketContext);
@@ -29,21 +30,31 @@ const List = (props) => {
           data.forEach((item) => {
             const { name, to, mes } = item;
             const isSentByUser = name === infor.user.infor.email;
-            dispatch(saveMessage({ name: isSentByUser ? to : name, mess: { text: mes, isSentByUser } }));
+            dispatch(
+              saveMessage({
+                name: isSentByUser ? to : name,
+                mess: { text: mes, isSentByUser },
+              })
+            );
           });
         } else if (respone.event === "GET_ROOM_CHAT_MES") {
           const data = respone.data.chatData;
           data.forEach((item) => {
             const { name, mes } = item;
             const isSentByUser = name === infor.user.infor.email;
-            dispatch(saveGroupMess({ nameGroup: respone.data.name, messGroup: { text: mes, isSentByUser } }));
+            dispatch(
+              saveGroupMess({
+                nameGroup: respone.data.name,
+                messGroup: { text: mes, isSentByUser },
+              })
+            );
           });
         }
       }
     }
   }, [respone]);
 
-  const handleFriendClick = (item) => {
+  const handleItemOnClick = (item) => {
     if (item.type === 0) {
       dispatch(clearMessage({ name: item.name }));
       const get_people_chat_mess = GET_PEOPLE_CHAT_MES(item.name);
@@ -57,33 +68,42 @@ const List = (props) => {
   };
 
   // Lọc và nhóm tin nhắn theo người nhận
-  const filteredList = {};
+  // const filteredList = {};
 
-  all.forEach((item) => {
-    const key = item.nameGroup || item.name;
-    if (!filteredList[key]) {
-      filteredList[key] = item;
-    }
-  });
+  // all.forEach((item) => {
+  //   const key = item.nameGroup || item.name;
+  //   if (!filteredList[key]) {
+  //     filteredList[key] = item;
+  //   }
+  // });
 
   return (
-      <div className="list">
-        <h1>Chat</h1>
-        <Search />
-        <div className="chatList">
-          {Object.values(filteredList).map((item) => (
+    <div className="list">
+      <h1>Chat</h1>
+      <Search />
+      <div className="chatList">
+        {all &&
+          all.map((item) => {
+            return item.type === 0 ? (
               <Friend
-                  key={item.nameGroup || item.name}
-                  img={item.img}
-                  name={item.nameGroup || item.name}
-                  time={item.time}
-                  message={item.message}
-                  unread={item.unread}
-                  onClick={() => handleFriendClick(item)}
+                key={item.name}
+                img={item.img}
+                name={item.nameGroup || item.name}
+                time={item.time}
+                message={item.message}
+                unread={item.unread}
+                onClick={() => handleItemOnClick(item)}
               />
-          ))}
-        </div>
+            ) : (
+              <ShowGroup
+                key={item.nameGroup}
+                nameGroup={item.nameGroup}
+                onClick={() => handleItemOnClick(item)}
+              />
+            );
+          })}
       </div>
+    </div>
   );
 };
 
