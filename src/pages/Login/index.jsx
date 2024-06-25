@@ -10,7 +10,8 @@ import { isEmail, isPassValid } from "../../process/checkInput";
 import { useNavigate } from "react-router-dom";
 import { GET_USER_LIST, Login } from "../../api/action";
 import { WebsocketContext } from "../../socket/WebsocketContent";
-import useFirebase from "../../firebaseSocket/Firebase";
+import { convertEmailToName } from "../../process/processString";
+import BouncyComponent from "../../components/animation/bouncy";
 
 // gửi email và pass đi với Login
 // ở trạng thái chờ phản hồi
@@ -19,12 +20,17 @@ const cx = classNames.bind(Styles);
 function LogIn() {
   const inputEmail = useRef(); // trường input email show lỗi
   const inputPass = useRef(); // trường input pass show lỗi
-
   const nav = useNavigate();
   const dispatch = useDispatch();
-  const firebase = useFirebase();
-
   const [isReady, respone, sender] = useContext(WebsocketContext);
+
+  const [form, setForm] = useState({ email: "", password: "" });
+  const handleOnChange = (e) => {
+    setForm((pre) => ({
+      ...form,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   // const [allVal, setAllVal] = useState(respone);
   // console.log(allVal);
@@ -36,31 +42,16 @@ function LogIn() {
   // 3 nếu nhấn quá nhiều
   // {event: 'LOGIN', status: 'error', mes: 'You are already logged in'}
   useEffect(() => {
-    if (respone) {
-      if (respone.status === "success") {
-        let name = form.email.split("@")[0];
-        dispatch(setName(name));
-        dispatch(setEmail(form.email));
-        const get_user_list = GET_USER_LIST();
-        sender(get_user_list);
-        nav("/home");
-      } else if (respone.status === "error") {
-        if (respone.mes === "Login error, Wrong Username or Password") {
-          inputEmail.current.setError("Email hoặc password không đúng");
-        } else {
-          inputEmail.current.setError("You are already logged in");
-        }
-      }
+    if (respone && respone.status === "success") {
+      let name = convertEmailToName(form.email);
+      dispatch(setName(name));
+      dispatch(setEmail(form.email));
+      sender(GET_USER_LIST());
+      nav("/home");
+    } else if (respone && respone.status === "error") {
+      inputEmail.current.setError("Email hoặc password không đúng");
     }
   }, [respone]);
-
-  const [form, setForm] = useState({ email: "", password: "" });
-  const handleOnChange = (e) => {
-    setForm((pre) => ({
-      ...form,
-      [e.target.name]: e.target.value,
-    }));
-  };
 
   const handleLoginBtn = () => {
     if (!isEmail(form.email)) {
@@ -74,45 +65,45 @@ function LogIn() {
       sender(login, true);
     }
   };
-  return (
-    <>
-      <section className={cx("container")}>
-        <div className={cx("form-container")}>
-          <div className={cx("brand-logo")}></div>
-          <div className={cx("brand-title")}>TWITTER</div>
-          <form className={cx("inputs")}>
-            <label htmlFor="email">Email</label>
-            <InputComponent
-              name="email"
-              inputValue={form.email}
-              placeholder="example@gmail.com"
-              onChange={handleOnChange}
-              onBlur={() =>
-                !isEmail(form.email)
-                  ? inputEmail.current.setError("Vui lòng nhập đúng email .")
-                  : inputEmail.current.setError("")
-              }
-              ref={inputEmail}
-            />
-            <label htmlFor="password">Password </label>
-            <InputComponent
-              name="password"
-              inputValue={form.password}
-              placeholder="The PassWord must At least has 6 letter ."
-              onChange={handleOnChange}
-              onBlur={() =>
-                !isPassValid(form.password)
-                  ? inputPass.current.setError("Ít nhất phải có 6 kí tự .")
-                  : inputPass.current.setError("")
-              }
-              ref={inputPass}
-            />
-          </form>
-          <ButtonComponent title="Login " onClick={handleLoginBtn} />
-          <ButtonComponent to="/signup" title="Sign Up" />
-        </div>
-      </section>
-    </>
+  return isReady ? (
+    <section className={cx("container")}>
+      <div className={cx("form-container")}>
+        <div className={cx("brand-logo")}></div>
+        <div className={cx("brand-title")}>TWITTER</div>
+        <form className={cx("inputs")}>
+          <label htmlFor="email">Email</label>
+          <InputComponent
+            name="email"
+            inputValue={form.email}
+            placeholder="example@gmail.com"
+            onChange={handleOnChange}
+            onBlur={() =>
+              !isEmail(form.email)
+                ? inputEmail.current.setError("Vui lòng nhập đúng email .")
+                : inputEmail.current.setError("")
+            }
+            ref={inputEmail}
+          />
+          <label htmlFor="password">Password </label>
+          <InputComponent
+            name="password"
+            inputValue={form.password}
+            placeholder="The PassWord must At least has 6 letter ."
+            onChange={handleOnChange}
+            onBlur={() =>
+              !isPassValid(form.password)
+                ? inputPass.current.setError("Ít nhất phải có 6 kí tự .")
+                : inputPass.current.setError("")
+            }
+            ref={inputPass}
+          />
+        </form>
+        <ButtonComponent title="Login " onClick={handleLoginBtn} />
+        <ButtonComponent to="/signup" title="Sign Up" />
+      </div>
+    </section>
+  ) : (
+    <BouncyComponent></BouncyComponent>
   );
 }
 

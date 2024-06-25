@@ -29,7 +29,7 @@ const userSlice = createSlice({
     },
     saveMessage: (state, action) => {
       const { name, mess } = action.payload;
-      const friendIndex = state.infor.friends.findIndex(f => f.name === name);
+      const friendIndex = state.infor.friends.findIndex((f) => f.name === name);
       if (friendIndex !== -1) {
         const friend = state.infor.friends[friendIndex];
         friend.messages = friend.messages ? [...friend.messages, mess] : [mess];
@@ -63,10 +63,14 @@ const userSlice = createSlice({
     },
     saveGroupMess: (state, action) => {
       const { nameGroup, messGroup } = action.payload;
-      const groupIndex = state.infor.groups.findIndex(g => g.nameGroup === nameGroup);
+      const groupIndex = state.infor.groups.findIndex(
+        (g) => g.nameGroup === nameGroup
+      );
       if (groupIndex !== -1) {
         const group = state.infor.groups[groupIndex];
-        group.messages = group.messages ? [...group.messages, messGroup] : [messGroup];
+        group.messages = group.messages
+          ? [...group.messages, messGroup]
+          : [messGroup];
         state.infor.groups[groupIndex] = { ...group };
       }
     },
@@ -82,7 +86,7 @@ const userSlice = createSlice({
       };
     },
     logout: (state, action) => {
-      state.infor = action.payload;
+      state.infor = { name: "", email: "", friends: [], groups: [] };
       state.status = "UnAuth";
     },
   },

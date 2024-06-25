@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Menu from "./menu/menu";
 import List from "./list/list";
 import "./home.css";
@@ -12,43 +12,44 @@ function Home() {
   const [isReady, respone, sender] = useContext(WebsocketContext);
   // ==> ko được xóa
   const dispatch = useDispatch();
+
   const infor = useSelector((state) => state.reducer);
   const [name, setName] = useState("");
+
+  const handleCreateRoom = (payload) => {
+    const item = { name: payload.data.name, type: 1, actionTime: "" };
+    dispatch(setGroups({ item }));
+  };
+  const hanldeGetUserList = (payload) => {
+    payload.data.forEach((item) => {
+      return item.type === 0
+        ? dispatch(setFriends({ item }))
+        : dispatch(setGroups({ item }));
+    });
+  };
+
   useEffect(() => {
     // setName
     setName(infor.user.infor.name);
-    if (respone) {
-      if (respone.status === "success") {
-        if (respone.event === "GET_USER_LIST") {
-          //vong lap nay de lay ra nhung nguoi cguoi tung chat va cac nhom
-          const data = respone.data;
-          data.map((item) => {
-            if (item.type === 0) {
-              dispatch(setFriends({ item }));
-            } else if (item.type === 1) {
-              dispatch(setGroups({ item }));
-            }
-          });
-        }
-        if (respone.event === "JOIN_ROOM") {
-          let name = respone.data.name;
-          let type = 1;
-          let actionTime = "";
-          let item = { name, type, actionTime };
-          dispatch(setGroups({ item }));
-        }
-        if (respone.event === "CREATE_ROOM") {
-          let name = respone.data.name;
-          let type = 1;
-          let actionTime = "";
-          let item = { name, type, actionTime };
-          dispatch(setGroups({ item }));
-        }
-      } else if (respone.status === "error") {
-        if (respone.event === "JOIN_ROOM") {
+    if (respone && respone.status === "success") {
+      switch (respone.event) {
+        case "GET_USER_LIST":
+          hanldeGetUserList(respone);
+          break;
+        case "JOIN_ROOM":
+        case "CREATE_ROOM":
+          handleCreateRoom(respone);
+          break;
+        default:
+          break;
+      }
+    } else if (respone && respone.status === "error") {
+      switch (respone.event) {
+        case "JOIN_ROOM":
           alert("Room not exist");
-          return;
-        }
+          break;
+        default:
+          break;
       }
     }
   }, [respone]);
@@ -58,16 +59,24 @@ function Home() {
    */
 
   const [selected, setSelected] = useState(null);
+  const inputFillGroup = useRef();
+  const handleDeleteFillInput = () => {
+    if (inputFillGroup.current) {
+      inputFillGroup.current.clearInput();
+    }
+  };
   return (
     <div className="container">
       <Menu name={name}></Menu>
-      <List setChatUser={setSelected}></List>
-      {/* {listFriends.length > 0 ? <Chat></Chat> : <></>} */}
+      <List
+        setChatUser={setSelected}
+        handleDeleteFillInput={handleDeleteFillInput}
+      ></List>
       {selected &&
         (selected.type === 0 ? (
-          <Chat friend={selected} />
+          <Chat friend={selected} ref={inputFillGroup} />
         ) : (
-          <GroupComponent group={selected} />
+          <GroupComponent group={selected} ref={inputFillGroup} />
         ))}
     </div>
   );

@@ -18,17 +18,16 @@ const Search = () => {
   const [name, setName] = useState("");
   const [isReady, respone, sender] = useContext(WebsocketContext);
   const findfriend = () => {
-    // let value = name;
+    let value = name;
     // const check_user = CHECK_USER(value);
-    // const send_chat = SEND_CHAT(value, "hi");
+    const send_chat = SEND_CHAT(value, "add friend");
     setName((pre) => "");
-    // sender(send_chat);
+    sender(send_chat);
   };
   const joingroup = () => {
     let value = name;
     const join_room = JOIN_ROOM(value);
     setName((pre) => "");
-
     sender(join_room);
   };
   const creategroup = () => {

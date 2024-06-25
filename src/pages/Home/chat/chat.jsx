@@ -1,4 +1,11 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import "./chat.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,9 +20,9 @@ import Message from "../message/message";
 import { WebsocketContext } from "../../../socket/WebsocketContent";
 import { SEND_CHAT, GET_PEOPLE_CHAT_MES } from "../../../api/action";
 import { useDispatch, useSelector } from "react-redux";
-import { saveMessage } from "../../../store/userSlice";
+import { saveMessage, setFriends } from "../../../store/userSlice";
 
-const Chat = (props) => {
+const Chat = (props, ref) => {
   const [isReady, respone, sender] = useContext(WebsocketContext);
   const dispatch = useDispatch();
   const infor = useSelector((state) => state.reducer);
@@ -33,53 +40,56 @@ const Chat = (props) => {
   useEffect(() => {
     setFriend((pre) => friends.find((item) => item.name === props.friend.name));
   }, [props.friend]);
-  useEffect(() => {
-    if (respone) {
-      if (respone.status === "success") {
-        if (respone.event === "SEND_CHAT") {
-          let mess = respone.data.mes;
-          let nameSender = respone.data.name;
-          if (nameSender === friend.name) {
-            dispatch(
-              saveMessage({
-                name: nameSender,
-                mess: { text: mess, isSentByUser: false },
-              })
-            );
-            setNewMessage("");
-            const newChat = [...messages, { text: mess, isSentByUser: false }];
-            setMessages(newChat);
-            return;
-          }
-          // data:{id: 0, name: 'doxuanhau@gmail.com', type: 0, to: 'ka@gmail.com', mes: '123123123123123'}
-          // event:"SEND_CHAT"
-          // status:"success"
-          dispatch(
-            saveMessage({
-              name: nameSender,
-              mess: { text: mess, isSentByUser: false },
-            })
-          );
-          setNewMessage("");
-        }
-        if (respone.event === "GET_PEOPLE_CHAT_MES") {
-          const listmess = respone.data;
-          listmess.reverse().map((item) => {
-            let name = item.name; //sender
-            let to = item.to; // retriver
-            let text = item.mes;
-            let a = name === infor.user.infor.email;
-            dispatch(
-              saveMessage({
-                name: friend.name,
-                mess: { text: text, isSentByUser: a },
-              })
-            );
-            // const newChat = [...messages, { text: text, isSentByUser: a }];
 
-            setMessages((pre) => [...pre, { text: text, isSentByUser: a }]);
-          });
-        }
+  const handleGetPeopleChatMess = (payload) => {
+    const listmess = payload.data;
+    listmess.reverse().map((item) => {
+      // let name = item.name; //sender
+      // let to = item.to; // retriver
+      // let text = item.mes;
+      // let a = name === infor.user.infor.email;
+      dispatch(
+        saveMessage({
+          name: friend.name,
+          mess: {
+            text: item.mes,
+            isSentByUser: item.name === infor.user.infor.email,
+          },
+        })
+      );
+      setMessages((pre) => [
+        ...pre,
+        { text: item.mes, isSentByUser: item.name === infor.user.infor.email },
+      ]);
+    });
+  };
+
+  const handleSendChatRespone = (payload) => {
+    // data:{id: 0, name: 'doxuanhau@gmail.com', type: 0, to: 'ka@gmail.com', mes: '123123123123123'}
+    // event:"SEND_CHAT"
+    // status:"success"
+
+    const newChat = [
+      ...messages,
+      {
+        text: payload.data.mes,
+        isSentByUser: payload.data.name === infor.user.infor.email,
+      },
+    ];
+    setNewMessage((prev) => "");
+    setMessages((pev) => newChat);
+  };
+  useEffect(() => {
+    if (respone && respone.status === "success") {
+      switch (respone.event) {
+        case "SEND_CHAT":
+          handleSendChatRespone(respone);
+          break;
+        case "GET_PEOPLE_CHAT_MES":
+          handleGetPeopleChatMess(respone);
+          break;
+        default:
+          break;
       }
     }
   }, [respone]);
@@ -87,22 +97,19 @@ const Chat = (props) => {
 
   const handleSendMessages = () => {
     if (newMessage.trim()) {
-      //
-      dispatch(
-        saveMessage({
-          name: friend.name,
-          mess: { text: newMessage, isSentByUser: true },
-        })
-      );
-      const send_chat = SEND_CHAT(props.friend.name, newMessage);
-      sender(send_chat);
-
+      sender(SEND_CHAT(props.friend.name, newMessage));
       //
       const newChat = [...messages, { text: newMessage, isSentByUser: true }];
-      setMessages(newChat);
       setNewMessage("");
+      setMessages(newChat);
     }
   };
+  const inputRef = useRef();
+  useImperativeHandle(ref, () => ({
+    clearInput() {
+      setNewMessage((p) => "");
+    },
+  }));
 
   return (
     <div className="chatContainer">
@@ -139,6 +146,7 @@ const Chat = (props) => {
           placeholder="Type message..."
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          ref={inputRef}
         />
         <div className="sendItem">
           <FontAwesomeIcon className="icon" icon={faFaceSmile} />
@@ -153,4 +161,4 @@ const Chat = (props) => {
   );
 };
 
-export default Chat;
+export default forwardRef(Chat);
