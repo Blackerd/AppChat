@@ -8,12 +8,15 @@ import { WebsocketContext } from "../../socket/WebsocketContent";
 import { logout, setFriends, setGroups } from "../../store/userSlice";
 import { RE_LOGIN, GET_PEOPLE_CHAT_MES } from "../../api/action";
 import GroupComponent from "../../components/group/GroupComponent";
+import { useNavigate } from "react-router-dom";
 function Home() {
   const [isReady, respone, sender] = useContext(WebsocketContext);
   // ==> ko được xóa
   const dispatch = useDispatch();
+  const nav = useNavigate();
 
   const infor = useSelector((state) => state.reducer);
+  if (infor.user.status !== "Auth") nav("/");
   const [name, setName] = useState("");
 
   const handleCreateRoom = (payload) => {

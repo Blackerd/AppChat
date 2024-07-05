@@ -6,7 +6,7 @@ import { setFriends, setName, setEmail } from "../../store/userSlice";
 import Styles from "./styles.module.css";
 import InputComponent from "../../components/input/InputComponent";
 import ButtonComponent from "../../components/button/ButtonComponent";
-import { isEmail, isPassValid } from "../../process/checkInput";
+import { isEmail, isPassValid, isNotEmrty } from "../../process/checkInput";
 import { useNavigate } from "react-router-dom";
 import { GET_USER_LIST, Login } from "../../api/action";
 import { WebsocketContext } from "../../socket/WebsocketContent";
@@ -24,7 +24,7 @@ function LogIn() {
   const dispatch = useDispatch();
   const [isReady, respone, sender] = useContext(WebsocketContext);
 
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ account: "", password: "" });
   const handleOnChange = (e) => {
     setForm((pre) => ({
       ...form,
@@ -43,25 +43,26 @@ function LogIn() {
   // {event: 'LOGIN', status: 'error', mes: 'You are already logged in'}
   useEffect(() => {
     if (respone && respone.status === "success") {
-      let name = convertEmailToName(form.email);
+      console.log(respone);
+      let name = convertEmailToName(form.account);
       dispatch(setName(name));
       dispatch(setEmail(form.email));
       sender(GET_USER_LIST());
       nav("/home");
     } else if (respone && respone.status === "error") {
-      inputEmail.current.setError("Email hoặc password không đúng");
+      inputEmail.current.setError("Account hoặc password không đúng");
     }
   }, [respone]);
 
   const handleLoginBtn = () => {
-    if (!isEmail(form.email)) {
+    if (isNotEmrty(form.account)) {
       inputEmail.current.setError("Vui lòng nhập đúng email !!");
     }
     if (!isPassValid(form.password)) {
       inputPass.current.setError("Phải có ít nhất 6 kí tự");
     }
-    if (isEmail(form.email) && isPassValid(form.password)) {
-      const login = Login(form.email, form.password);
+    if (!isNotEmrty(form.account) && isPassValid(form.password)) {
+      const login = Login(form.account, form.password);
       sender(login, true);
     }
   };
@@ -71,15 +72,15 @@ function LogIn() {
         <div className={cx("brand-logo")}></div>
         <div className={cx("brand-title")}>TWITTER</div>
         <form className={cx("inputs")}>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="account">Account</label>
           <InputComponent
-            name="email"
+            name="account"
             inputValue={form.email}
-            placeholder="example@gmail.com"
+            placeholder="Your account"
             onChange={handleOnChange}
             onBlur={() =>
-              !isEmail(form.email)
-                ? inputEmail.current.setError("Vui lòng nhập đúng email .")
+              isNotEmrty(form.account)
+                ? inputEmail.current.setError("Vui lòng nhập đầy đủ thông tin.")
                 : inputEmail.current.setError("")
             }
             ref={inputEmail}
@@ -88,7 +89,7 @@ function LogIn() {
           <InputComponent
             name="password"
             inputValue={form.password}
-            placeholder="The PassWord must At least has 6 letter ."
+            placeholder="The PassWord must at least has 6 letter ."
             onChange={handleOnChange}
             onBlur={() =>
               !isPassValid(form.password)

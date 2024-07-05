@@ -9,5 +9,7 @@ function isPassValid(value) {
 function isConfirmPass(confirm, pass) {
   return confirm.length > 0 && confirm === pass;
 }
-
-export { isEmail, isPassValid, isConfirmPass };
+function isNotEmrty(value) {
+  return value.length <= 0;
+}
+export { isEmail, isPassValid, isConfirmPass, isNotEmrty };
