@@ -8,14 +8,16 @@ import {
 import { Logout } from "../../../api/action";
 import { WebsocketContext } from "../../../socket/WebsocketContent";
 import "./menu.css";
+import { logout } from "../../../store/userSlice";
+import { useDispatch } from "react-redux";
 
 const Menu = (props) => {
   const [, , sendJsonMessage] = useContext(WebsocketContext);
-
+  const dispatch = useDispatch();
   const handleLogout = () => {
     const logoutAction = Logout(); // Tạo hành động đăng xuất sử dụng hàm Logout từ API
     sendJsonMessage(logoutAction); // Gửi yêu cầu đăng xuất qua WebSocket
-
+    dispatch(logout());
     //  chuyển hướng về trang đăng nhập
     window.location.href = "/";
   };
