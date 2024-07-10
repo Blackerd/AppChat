@@ -4,13 +4,14 @@ import Friend from "../friend/friend";
 import "./list.css";
 import { useDispatch, useSelector } from "react-redux";
 import { WebsocketContext } from "../../../socket/WebsocketContent";
-import { GET_PEOPLE_CHAT_MES, GET_ROOM_CHAT_MES } from "../../../api/action";
+import { GET_PEOPLE_CHAT_MES, GET_ROOM_CHAT_MES, SEND_CHAT } from "../../../api/action";
 import {
   clearGroupMess,
   clearMessage,
   setGroups,
   saveMessage,
   saveGroupMess,
+  setFriends
 } from "../../../store/userSlice";
 import ShowGroup from "../../../components/group/showgroup/GroupShow";
 
@@ -24,10 +25,10 @@ const List = (props) => {
 
   // Lọc danh sách để giữ lại mỗi người hoặc nhóm chỉ một lần
   const uniqueChatList = Array.from(
-      new Set(all.map((item) => (item.type === 0 ? item.name : item.nameGroup)))
+    new Set(all.map((item) => (item.type === 0 ? item.name : item.nameGroup)))
   ).map((name) => {
     return all.find(
-        (item) => (item.type === 0 ? item.name : item.nameGroup) === name
+      (item) => (item.type === 0 ? item.name : item.nameGroup) === name
     );
   });
 
@@ -40,10 +41,10 @@ const List = (props) => {
             const { name, to, mes } = item;
             const isSentByUser = name === infor.user.infor.email;
             dispatch(
-                saveMessage({
-                  name: isSentByUser ? to : name,
-                  mess: { text: mes, isSentByUser },
-                })
+              saveMessage({
+                name: isSentByUser ? to : name,
+                mess: { text: mes, isSentByUser },
+              })
             );
           });
         } else if (respone.event === "GET_ROOM_CHAT_MES") {
@@ -52,13 +53,67 @@ const List = (props) => {
             const { name, mes } = item;
             const isSentByUser = name === infor.user.infor.email;
             dispatch(
-                saveGroupMess({
-                  nameGroup: respone.data.name,
-                  messGroup: { text: mes, isSentByUser },
-                })
+              saveGroupMess({
+                nameGroup: respone.data.name,
+                messGroup: { text: mes, isSentByUser },
+              })
             );
           });
         }
+      }
+    }
+  }, [respone]);
+
+  const handleGetPeopleChatMess = (payload) => {
+    payload.data.forEach((item) => {
+      const { name, to, mes } = item;
+      const isSentByUser = name === infor.user.infor.email;
+      dispatch(
+        saveMessage({
+          name: isSentByUser ? to : name,
+          mess: { text: mes, isSentByUser },
+        })
+      );
+    });
+  };
+
+  const handleGetRoomChatMess = (payload) => {
+    payload.data.chatData.forEach((item) => {
+      const { name, mes } = item;
+      const isSentByUser = name === infor.user.infor.email;
+      dispatch(
+        saveGroupMess({
+          nameGroup: respone.data.name,
+          messGroup: { text: mes, isSentByUser },
+        })
+      );
+    });
+  };
+
+  const handleSendChat = (payload) => {
+    console.log(payload);
+    const check = friends.every((item) => item.name !== payload.data.name);
+    if (check) {
+      const item = { name: payload.data.name, type: 0, actionTime: "" };
+      dispatch(setFriends({ item }));
+      sender(SEND_CHAT(payload.data.name, ""));
+    }
+  };
+
+  useEffect(() => {
+    if (respone && respone.status === "success") {
+      switch (respone.event) {
+        case "SEND_CHAT":
+          handleSendChat(respone);
+          break;
+        case "GET_PEOPLE_CHAT_MES":
+          handleGetPeopleChatMess(respone);
+          break;
+        case "GET_ROOM_CHAT_MES":
+          handleGetRoomChatMess(respone);
+          break;
+        default:
+          break;
       }
     }
   }, [respone]);
@@ -77,32 +132,32 @@ const List = (props) => {
   };
 
   return (
-      <div className="list">
-        <h1>Chat</h1>
-        <Search />
-        <div className="chatList">
-          {uniqueChatList &&
-              uniqueChatList.map((item) => {
-                return item.type === 0 ? (
-                    <Friend
-                        key={item.name}
-                        img={item.img}
-                        name={item.nameGroup || item.name}
-                        time={item.time}
-                        message={item.message}
-                        unread={item.unread}
-                        onClick={() => handleItemOnClick(item)}
-                    />
-                ) : (
-                    <ShowGroup
-                        key={item.nameGroup}
-                        nameGroup={item.nameGroup}
-                        onClick={() => handleItemOnClick(item)}
-                    />
-                );
-              })}
-        </div>
+    <div className="list">
+      <h1>Chat</h1>
+      <Search />
+      <div className="chatList">
+        {uniqueChatList &&
+          uniqueChatList.map((item) => {
+            return item.type === 0 ? (
+              <Friend
+                key={item.name}
+                img={item.img}
+                name={item.nameGroup || item.name}
+                time={item.time}
+                message={item.message}
+                unread={item.unread}
+                onClick={() => handleItemOnClick(item)}
+              />
+            ) : (
+              <ShowGroup
+                key={item.nameGroup}
+                nameGroup={item.nameGroup}
+                onClick={() => handleItemOnClick(item)}
+              />
+            );
+          })}
       </div>
+    </div>
   );
 };
 

@@ -47,11 +47,18 @@ const ChangeEmail = () => {
             <div className={styles.main}>
                 <div className={styles.left}>
                     <div className={styles.container}>
-                        <div className={styles.logo}></div>
-                        <div className={styles.avatar}>
-                            <img className={styles.avatar} src="" alt=""/>
-                            <span className={styles.username}></span>
-                        </div>
+
+                            <div className={styles.avatarContainer}>
+
+                                <div className={styles['back-arrow']} onClick={() => navigate('/home')}>
+                                    &#8592; {}
+                                </div>
+                                <img
+                                    className={styles.avatar}
+                                    src="https://www.w3schools.com/howto/img_avatar.png"
+                                    alt="Avatar"
+                                /></div>                            <span className={styles.username}></span>
+
                     </div>
 
                     <div className={styles.function}>

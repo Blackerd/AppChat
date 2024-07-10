@@ -4,7 +4,12 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import Styles from "./Styles.module.css";
 import InputComponent from "../../components/input/InputComponent";
 import ButtonComponent from "../../components/button/ButtonComponent";
-import { isEmail, isPassValid, isConfirmPass } from "../../process/checkInput";
+import {
+  isEmail,
+  isPassValid,
+  isConfirmPass,
+  isNotEmrty,
+} from "../../process/checkInput";
 import { login as auth } from "../../store/userSlice";
 import { useDispatch } from "react-redux";
 import { WebsocketContext } from "../../socket/WebsocketContent";
@@ -34,6 +39,7 @@ function Signup() {
 
   useEffect(() => {
     if (respone) {
+      console.log(respone);
       if (respone.status === "success") {
         respone.status = "";
         nav("/");
@@ -43,7 +49,7 @@ function Signup() {
     }
   }, [respone]);
 
-  const [form, setForm] = useState({ email: "", password: "", confirm: "" });
+  const [form, setForm] = useState({ account: "", password: "", confirm: "" });
   const handleOnChange = (e) => {
     setForm((prev) => ({
       ...form,
@@ -52,8 +58,8 @@ function Signup() {
   };
 
   const handleSigninBtn = (e) => {
-    if (!isEmail(form.email)) {
-      inputEmail.current.setError("Vui lòng nhập đúng email !!");
+    if (isNotEmrty(form.account)) {
+      inputEmail.current.setError("Vui lòng nhập đầy đủ thông tin !!");
     }
     if (!isPassValid(form.password)) {
       inputPass.current.setError("Phải có ít nhất 6 kí tự");
@@ -62,8 +68,8 @@ function Signup() {
       inputConfirm.current.setError("Mật khẩu xác thực không đúng !!");
       return;
     }
-    if (isEmail(form.email) && isPassValid(form.password)) {
-      const register = REGISTER(form.email, form.password);
+    if (!isNotEmrty(form.account) && isPassValid(form.password)) {
+      const register = REGISTER(form.account, form.password);
       sender(register, true);
     }
   };
@@ -75,15 +81,17 @@ function Signup() {
           <div className={cx("brand-logo")}></div>
           <div className={cx("brand-title")}>TWITTER</div>
           <form className={cx("inputs")}>
-            <label htmlFor="email">Email</label>
+            <label htmlFor="account">Account</label>
             <InputComponent
-              name="email"
-              inputValue={form.email}
-              placeholder="example@gmail.com"
+              name="account"
+              inputValue={form.account}
+              placeholder="Your account"
               onChange={handleOnChange}
               onBlur={() =>
-                !isEmail(form.email)
-                  ? inputEmail.current.setError("Vui lòng nhập đúng email .")
+                !isEmail(form.account)
+                  ? inputEmail.current.setError(
+                      "Vui lòng nhập đầy đủ thông tin."
+                    )
                   : inputEmail.current.setError("")
               }
               ref={inputEmail}

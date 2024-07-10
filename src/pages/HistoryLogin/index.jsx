@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './styles.module.css';
-import { useNavigate } from 'react-router-dom'; // Sử dụng React Router
+import { useNavigate } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa'; // Import the back arrow icon from react-icons
 
 const History = () => {
     const [filter, setFilter] = useState('Tất cả');
@@ -17,26 +18,23 @@ const History = () => {
         { action: 'Đăng nhập', time: '12/05/2023 09:30 AM', browser: 'Brave', device: 'Máy tính', ip: '222.222.222' },
         { action: 'Đăng xuất', time: '12/05/2023 09:30 AM', browser: 'Microsoft Edge', device: 'Máy tính', ip: '222.222.222' },
     ];
-    const handleLogout = () => {
-        // Xóa thông tin đăng nhập khỏi localStorage hoặc gọi API để đăng xuất
-        localStorage.removeItem('token');
 
-        // Điều hướng về trang đăng nhập
-        navigate('/');
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/home');
     };
 
-    const protectAccForward = () =>{
+    const protectAccForward = () => {
         navigate('/acc_protect');
-    }
-    const informationForward = () =>{
+    };
+
+    const informationForward = () => {
         navigate('/info');
-    }
+    };
 
-
-    const historyForward = () =>{
+    const historyForward = () => {
         navigate('/history');
-    }
-
+    };
 
     const filteredActivities = activities.filter(activity =>
         filter === 'Tất cả' || activity.action === filter
@@ -47,10 +45,14 @@ const History = () => {
             <div className={styles.main}>
                 <div className={styles.left}>
                     <div className={styles.container}>
-                        <div className={styles.logo}></div>
-                        <div className={styles.avatar}>
-                            <img className={styles['avatar-image']} src="" alt="" />
-                            <span className={styles.username}></span>
+                        <div className={styles.avatarContainer}>
+                            <div className={styles['back-arrow']} onClick={() => navigate('/home')}>
+                                    &#8592; {}
+                            </div>                            <img
+                                className={styles.avatar}
+                                src="https://www.w3schools.com/howto/img_avatar.png"
+                                alt="Avatar"
+                            />
                         </div>
                     </div>
                     <div className={styles.function}>
@@ -58,7 +60,7 @@ const History = () => {
                             <h4>Thông tin tài khoản</h4>
                             <span>Quản lý thông tin đăng nhập và thông tin cá nhân</span>
                         </div>
-                        <div className={styles['function-item'] } onClick={protectAccForward}>
+                        <div className={styles['function-item']} onClick={protectAccForward}>
                             <h4>Bảo vệ tài khoản</h4>
                             <span>Hỗ trợ bảo vệ tài khoản</span>
                         </div>
@@ -67,9 +69,6 @@ const History = () => {
                             <span>Lịch sử hoạt động của tài khoản</span>
                         </div>
 
-                        <div className={styles['function-item'] } onClick={handleLogout}>
-                            <h4>Đăng xuất</h4>
-                        </div>
                     </div>
                 </div>
                 <div className={styles.right}>
