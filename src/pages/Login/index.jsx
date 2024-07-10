@@ -66,6 +66,11 @@ function LogIn() {
       sender(login, true);
     }
   };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   dispatch(setUser({ username: form.username, email: form.email }));
+  //   navigate('/info');
+  // };
   return isReady ? (
     <section className={cx("container")}>
       <div className={cx("form-container")}>
