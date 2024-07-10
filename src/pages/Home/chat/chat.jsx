@@ -33,77 +33,86 @@ const Chat = (props, ref) => {
 
   const [messages, setMessages] = useState(friend.listmessage);
   const [newMessage, setNewMessage] = useState("");
-  //save message into friend in redux
+  const [uniqueMessages, setUniqueMessages] = useState(new Map());
+
   useEffect(() => {
-    setMessages((p) => friend.listmessage);
+    setMessages(friend.listmessage);
   }, [friend]);
+
   useEffect(() => {
-    setFriend((pre) => friends.find((item) => item.name === props.friend.name));
+    setFriend(friends.find((item) => item.name === props.friend.name));
   }, [props.friend]);
 
-  const handleGetPeopleChatMess = (payload) => {
-    const listmess = payload.data;
-    listmess.reverse().map((item) => {
-      // let name = item.name; //sender
-      // let to = item.to; // retriver
-      // let text = item.mes;
-      // let a = name === infor.user.infor.email;
-      dispatch(
-        saveMessage({
-          name: friend.name,
-          mess: {
-            text: item.mes,
-            isSentByUser: item.name === infor.user.infor.email,
-          },
-        })
-      );
-      setMessages((pre) => [
-        ...pre,
-        { text: item.mes, isSentByUser: item.name === infor.user.infor.email },
-      ]);
-    });
-  };
-
-  const handleSendChatRespone = (payload) => {
-    // data:{id: 0, name: 'doxuanhau@gmail.com', type: 0, to: 'ka@gmail.com', mes: '123123123123123'}
-    // event:"SEND_CHAT"
-    // status:"success"
-
-    const newChat = [
-      ...messages,
-      {
-        text: payload.data.mes,
-        isSentByUser: payload.data.name === infor.user.infor.email,
-      },
-    ];
-    setNewMessage((prev) => "");
-    setMessages((pev) => newChat);
-  };
   useEffect(() => {
-    if (respone && respone.status === "success") {
-      switch (respone.event) {
-        case "SEND_CHAT":
-          handleSendChatRespone(respone);
-          break;
-        case "GET_PEOPLE_CHAT_MES":
-          handleGetPeopleChatMess(respone);
-          break;
-        default:
-          break;
+    if (respone) {
+      if (respone.status === "success") {
+        if (respone.event === "SEND_CHAT") {
+          let mess = respone.data.mes;
+          let nameSender = respone.data.name;
+          if (nameSender === friend.name) {
+            dispatch(
+              saveMessage({
+                name: nameSender,
+                mess: { text: mess, isSentByUser: false },
+              })
+            );
+            setNewMessage("");
+            if (!uniqueMessages.has(mess)) {
+              uniqueMessages.set(mess, { text: mess, isSentByUser: false });
+              setMessages([...uniqueMessages.values()]);
+            }
+            return;
+          }
+          dispatch(
+            saveMessage({
+              name: nameSender,
+              mess: { text: mess, isSentByUser: false },
+            })
+          );
+          setNewMessage("");
+        }
+        if (respone.event === "GET_PEOPLE_CHAT_MES") {
+          const listmess = respone.data;
+          listmess.reverse().forEach((item) => {
+            let name = item.name; // sender
+            let to = item.to; // receiver
+            let text = item.mes;
+            let a = name === infor.user.infor.email;
+            if (!uniqueMessages.has(text)) {
+              uniqueMessages.set(text, { text, isSentByUser: a });
+              dispatch(
+                saveMessage({
+                  name: friend.name,
+                  mess: { text, isSentByUser: a },
+                })
+              );
+              setMessages([...uniqueMessages.values()]);
+            }
+          });
+        }
       }
     }
   }, [respone]);
-  //
 
   const handleSendMessages = () => {
     if (newMessage.trim()) {
-      sender(SEND_CHAT(props.friend.name, newMessage));
-      //
-      const newChat = [...messages, { text: newMessage, isSentByUser: true }];
-      setNewMessage("");
-      setMessages(newChat);
+      dispatch(
+        saveMessage({
+          name: friend.name,
+          mess: { text: newMessage, isSentByUser: true },
+        })
+      );
+      const send_chat = SEND_CHAT(props.friend.name, newMessage);
+      sender(send_chat);
+
+      if (!uniqueMessages.has(newMessage)) {
+        uniqueMessages.set(newMessage, { text: newMessage, isSentByUser: true });
+        setMessages([...uniqueMessages.values()]);
+        setNewMessage("");
+      }
     }
   };
+
   const inputRef = useRef();
   useImperativeHandle(ref, () => ({
     clearInput() {

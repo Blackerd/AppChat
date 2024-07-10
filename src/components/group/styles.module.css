@@ -1,0 +1,201 @@
+.chatContainer {
+  width: 60%;
+  height: 100vh;
+  position: absolute;
+  right: 0px;
+  background-color: #f5f5f5;
+  margin: 10px 10px 10px 0;
+  border-radius: 10px;
+  display: grid;
+  grid-template-rows: 1fr 6fr 1fr;
+}
+
+.header {
+  width: 100%;
+  max-height: 100px;
+  background-color: #03aed2;
+}
+
+.item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  margin: 5px;
+  background: #c0d6e8;
+  border-radius: 10px;
+}
+
+/* .chatContainer .header .item .img {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+.chatContainer .header .item .img img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+} */
+.name {
+  width: 100%;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* gap: 640px; */
+  color: black;
+  font-size: 30px;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+  font-family: sans-serif;
+  color: #087a69;
+  margin: 0;
+  padding: 0;
+}
+
+.messageimg {
+  max-width: 30%;
+  height: auto;
+  background: white;
+  margin: 0px 0px 0px 10rem;
+  object-fit: contain;
+  transition: all 2s ease-in-out;
+}
+
+.userimg {
+  align-self: flex-end;
+}
+
+.friendimg {
+  align-self: flex-start;
+}
+
+.chatContainer .header .item .name .info span {
+  margin-right: 5px;
+}
+
+.chatContainer .header .item .name .info .text {
+  display: flex;
+  align-items: center;
+}
+
+.chatContainer .header .item .name .icons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  cursor: pointer;
+}
+
+.chatContainer .header .item .name .icons .icon:hover {
+  color: #03aed2;
+}
+
+.main {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: #ecf0f3;
+  transition: all 2s ease-in-out;
+}
+
+.message {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 10px;
+  max-width: 50%;
+  font-size: 2rem;
+  font-style: oblique;
+  word-wrap: break-word;
+  white-space: normal;
+  text-overflow: ellipsis;
+  transition: all 2s ease-in-out;
+}
+
+.friend {
+  background-color: #1c1678;
+  color: white;
+  align-self: flex-start;
+}
+
+.user {
+  background-color: #007bff;
+  color: white;
+  align-self: flex-end;
+}
+
+.footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  padding: 5px;
+  align-items: center;
+  background: #c0d6e8;
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.footer .input {
+  width: 100%;
+  height: 100%;
+  background: none;
+  font-size: 2.5rem;
+  color: #1c1678;
+  font-style: italic;
+}
+
+.footer .sendItem {
+  display: flex;
+  gap: 10px;
+  font-size: 16px;
+}
+
+.footer .sendItem .icon {
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.footer .sendItem .icon:hover {
+  color: #03aed2;
+}
+
+.footer .sendItem .send {
+  display: flex;
+  background: #1c1678;
+  padding: 6px;
+  border-radius: 3px;
+  color: #ecf0f3;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.footer .sendItem .send .icon {
+  margin-top: 2px;
+}
+
+.footer .sendItem .send:hover {
+  background: #03aed2;
+}
+
+.inputfile {
+  display: none;
+}
+
+.previewimg {
+  max-width: 20%;
+  height: auto;
+  background: white;
+  margin: 0px 0px 0px 10rem;
+  object-fit: contain;
+  transition: all 2s ease-in-out;
+}
+
+/*# sourceMappingURL=styles.module.css.map */
