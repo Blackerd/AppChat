@@ -45,6 +45,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
 }
 
 .container {
@@ -53,11 +54,19 @@ body {
     align-items: center;
 }
 
-.logo {
-    width: 6.25rem;
-    height: 6.25rem;
-    background-color: var(--secondary-color);
-    margin-bottom: 2rem;
+.avatar-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 5rem; /* Adjust height if needed */
+}
+
+.left .back-arrow {
+    position: absolute;
+    left: 10px;
+    font-size: 2rem;
+    cursor: pointer;
 }
 
 .avatar {
@@ -65,7 +74,6 @@ body {
     height: 5rem;
     background-color: var(--secondary-color);
     border-radius: 50%;
-    margin-bottom: 2rem;
 }
 
 .username {

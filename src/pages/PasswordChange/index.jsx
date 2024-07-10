@@ -46,11 +46,18 @@ const ChangePassword= () => {
             <div className={styles.main}>
                 <div className={styles.left}>
                     <div className={styles.container}>
-                        <div className={styles.logo}></div>
                         <div className={styles.avatar}>
-                            <img className={styles.avatar} src="" alt="" />
-                            <span className={styles.username}></span>
-                        </div>
+
+                            <div className={styles.avatarContainer}>
+
+                                <div className={styles['back-arrow']} onClick={() => navigate('/home')}>
+                                    &#8592; {}
+                                </div>
+                                <img
+                                    className={styles.avatar}
+                                    src="https://www.w3schools.com/howto/img_avatar.png"
+                                    alt="Avatar"
+                                /></div>                        </div>
                     </div>
 
                     <div className={styles.function}>
@@ -69,9 +76,7 @@ const ChangePassword= () => {
                             <h4>Nhật kí hoạt động</h4>
                             <span>Lịch sử hoạt động của tài khoản</span>
                         </div>
-                        <div className={styles['function-item']} onClick={handleLogout}>
-                            <h4>Đăng xuất</h4>
-                        </div>
+
                     </div>
                 </div>
                 <div className={styles.right}>
