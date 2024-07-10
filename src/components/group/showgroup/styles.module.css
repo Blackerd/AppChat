@@ -1,0 +1,45 @@
+.container {
+  width: 100%;
+  height: 50px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.group {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  background: #0eeaf6;
+  width: 90%;
+  height: 100%;
+  justify-content: center;
+  align-items: start;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 10px;
+  padding: 0.5rem 1.5rem;
+}
+
+.group:hover {
+  background: #02b4be;
+  color: #50f1b4;
+}
+
+.group__name {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  height: 80%;
+  font-size: 1.7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 700;
+}
+
+.group_mess {
+  height: 10%;
+  background: yellow;
+}
+
+/*# sourceMappingURL=styles.module.css.map */

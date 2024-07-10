@@ -22,6 +22,15 @@ const List = (props) => {
   const groups = infor.user.infor.groups;
   const all = [...friends, ...groups];
 
+  // Lọc danh sách để giữ lại mỗi người hoặc nhóm chỉ một lần
+  const uniqueChatList = Array.from(
+      new Set(all.map((item) => (item.type === 0 ? item.name : item.nameGroup)))
+  ).map((name) => {
+    return all.find(
+        (item) => (item.type === 0 ? item.name : item.nameGroup) === name
+    );
+  });
+
   useEffect(() => {
     if (respone) {
       if (respone.status === "success") {
@@ -31,10 +40,10 @@ const List = (props) => {
             const { name, to, mes } = item;
             const isSentByUser = name === infor.user.infor.email;
             dispatch(
-              saveMessage({
-                name: isSentByUser ? to : name,
-                mess: { text: mes, isSentByUser },
-              })
+                saveMessage({
+                  name: isSentByUser ? to : name,
+                  mess: { text: mes, isSentByUser },
+                })
             );
           });
         } else if (respone.event === "GET_ROOM_CHAT_MES") {
@@ -43,10 +52,10 @@ const List = (props) => {
             const { name, mes } = item;
             const isSentByUser = name === infor.user.infor.email;
             dispatch(
-              saveGroupMess({
-                nameGroup: respone.data.name,
-                messGroup: { text: mes, isSentByUser },
-              })
+                saveGroupMess({
+                  nameGroup: respone.data.name,
+                  messGroup: { text: mes, isSentByUser },
+                })
             );
           });
         }
@@ -67,43 +76,33 @@ const List = (props) => {
     props.setChatUser(item);
   };
 
-  // Lọc và nhóm tin nhắn theo người nhận
-  // const filteredList = {};
-
-  // all.forEach((item) => {
-  //   const key = item.nameGroup || item.name;
-  //   if (!filteredList[key]) {
-  //     filteredList[key] = item;
-  //   }
-  // });
-
   return (
-    <div className="list">
-      <h1>Chat</h1>
-      <Search />
-      <div className="chatList">
-        {all &&
-          all.map((item) => {
-            return item.type === 0 ? (
-              <Friend
-                key={item.name}
-                img={item.img}
-                name={item.nameGroup || item.name}
-                time={item.time}
-                message={item.message}
-                unread={item.unread}
-                onClick={() => handleItemOnClick(item)}
-              />
-            ) : (
-              <ShowGroup
-                key={item.nameGroup}
-                nameGroup={item.nameGroup}
-                onClick={() => handleItemOnClick(item)}
-              />
-            );
-          })}
+      <div className="list">
+        <h1>Chat</h1>
+        <Search />
+        <div className="chatList">
+          {uniqueChatList &&
+              uniqueChatList.map((item) => {
+                return item.type === 0 ? (
+                    <Friend
+                        key={item.name}
+                        img={item.img}
+                        name={item.nameGroup || item.name}
+                        time={item.time}
+                        message={item.message}
+                        unread={item.unread}
+                        onClick={() => handleItemOnClick(item)}
+                    />
+                ) : (
+                    <ShowGroup
+                        key={item.nameGroup}
+                        nameGroup={item.nameGroup}
+                        onClick={() => handleItemOnClick(item)}
+                    />
+                );
+              })}
+        </div>
       </div>
-    </div>
   );
 };
 
