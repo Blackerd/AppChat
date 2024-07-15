@@ -11,7 +11,7 @@ import GroupComponent from "../../components/group/GroupComponent";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
-  const [isReady, response, sender] = useContext(WebsocketContext);
+  const [isReady, respone, sender] = useContext(WebsocketContext);
   const dispatch = useDispatch();
   const nav = useNavigate();
 
@@ -26,7 +26,7 @@ function Home() {
     dispatch(setGroups({ item }));
   };
 
-  const handleGetUserList = (payload) => {
+  const hanldeGetUserList = (payload) => {
     payload.data.forEach((item) => {
       return item.type === 0
           ? dispatch(setFriends({ item }))
@@ -36,20 +36,21 @@ function Home() {
 
   useEffect(() => {
     setName(infor.user.infor.name);
-    if (response && response.status === "success") {
-      switch (response.event) {
+
+    if (respone && respone.status === "success") {
+      switch (respone.event) {
         case "GET_USER_LIST":
-          handleGetUserList(response);
+          hanldeGetUserList(respone);
           break;
         case "JOIN_ROOM":
         case "CREATE_ROOM":
-          handleCreateRoom(response);
+          handleCreateRoom(respone);
           break;
         default:
           break;
       }
-    } else if (response && response.status === "error") {
-      switch (response.event) {
+    } else if (respone && respone.status === "error") {
+      switch (respone.event) {
         case "JOIN_ROOM":
           alert("Room not exist");
           break;
@@ -57,14 +58,7 @@ function Home() {
           break;
       }
     }
-  }, [response]);
-
-  useEffect(() => {
-    // Chọn người đầu tiên trong danh sách để nhắn tin khi danh sách được load lên
-    if (infor.user.infor.friends.length > 0 && !selectedUser) {
-      setSelectedUser(infor.user.infor.friends[0]);
-    }
-  }, [infor.user.infor.friends]);
+  }, [respone]);
 
   const inputFillGroup = useRef();
 
@@ -74,25 +68,34 @@ function Home() {
     }
   };
 
+  const handleSetSelectedUser = (user) => {
+    setSelectedUser(user);
+  };
+
   return (
-      <div className={"home"}>
+      <div className="home">
         <div className="home-container">
-          <div className={"navMenu"}>
+          <div className="navMenu">
             <Menu name={name} />
           </div>
           <div className="content-container">
             <div className="list-container">
               <List
-                  setChatUser={setSelectedUser}
+                  setChatUser={handleSetSelectedUser}
                   handleDeleteFillInput={handleDeleteFillInput}
               />
             </div>
             <div className="chat-container">
-              {selectedUser && selectedUser.type === 0 && (
-                  <Chat friend={selectedUser} ref={inputFillGroup} />
-              )}
-              {selectedUser && selectedUser.type !== 0 && (
-                  <GroupComponent group={selectedUser} ref={inputFillGroup} />
+              {selectedUser ? (
+                  selectedUser.type === 0 ? (
+                      <Chat friend={selectedUser} ref={inputFillGroup} />
+                  ) : (
+                      <GroupComponent group={selectedUser} ref={inputFillGroup} />
+                  )
+              ) : (
+                  <div className="empty-chat">
+                    Trống
+                  </div>
               )}
             </div>
           </div>

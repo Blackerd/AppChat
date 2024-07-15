@@ -6,5 +6,4 @@ const Message = ({ text, isSentByUser }) => {
       <div className={`message ${isSentByUser ? "user" : "friend"}`}>{text}</div>
   );
 };
-
 export default Message;

@@ -9,7 +9,7 @@
   margin: 10px;
   background: #c0d6e8;
   border-radius: 10px;
-  width: 250px;
+  width: 100%;
 }
 .friend .friendItem .item .img {
   width: 40px;
@@ -54,6 +54,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  max-width: 150px;
 }
 .friend .friendItem .item .name .text .unread {
   background-color: #ff6347;

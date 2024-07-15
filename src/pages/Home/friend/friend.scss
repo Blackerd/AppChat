@@ -10,7 +10,7 @@
       margin: 10px;
       background: #c0d6e8;
       border-radius: 10px;
-      width: 250px;
+      width: 100%; // Thay đổi từ 250px thành 100% để tự động điều chỉnh theo chiều rộng cha
 
       .img {
         width: 40px;
@@ -59,6 +59,7 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+            max-width: 150px; // Đảm bảo không bị tràn dòng
           }
 
           .unread {

@@ -64,13 +64,13 @@ const userSlice = createSlice({
     saveGroupMess: (state, action) => {
       const { nameGroup, messGroup } = action.payload;
       const groupIndex = state.infor.groups.findIndex(
-        (g) => g.nameGroup === nameGroup
+          (g) => g.nameGroup === nameGroup
       );
       if (groupIndex !== -1) {
         const group = state.infor.groups[groupIndex];
         group.messages = group.messages
-          ? [...group.messages, messGroup]
-          : [messGroup];
+            ? [...group.messages, messGroup]
+            : [messGroup];
         state.infor.groups[groupIndex] = { ...group };
       }
     },

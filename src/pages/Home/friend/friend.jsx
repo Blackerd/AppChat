@@ -1,17 +1,7 @@
 import React from "react";
 import "./friend.css";
 
-const Friend = ({ img, name, lastMessage, lastMessageTime, unread, onClick, isCurrentUser }) => {
-  const getLastMessageText = () => {
-    if (!lastMessage) return "Chưa có tin nhắn";
-
-    if (isCurrentUser) {
-      return `Bạn: ${lastMessage}`;
-    } else {
-      return `Friend: ${lastMessage}`;
-    }
-  };
-
+const Friend = ({ img, name, time, message, unread, onClick }) => {
   return (
       <div className="friend" onClick={onClick}>
         <div className="friendItem">
@@ -22,10 +12,10 @@ const Friend = ({ img, name, lastMessage, lastMessageTime, unread, onClick, isCu
             <div className="name">
               <div className="info">
                 <span>{name}</span>
-                <span>{lastMessageTime}</span>
+                <span>{time}</span>
               </div>
               <div className="text">
-                <span>{getLastMessageText()}</span>
+                <span>{message}</span>
                 {unread > 0 && <div className="unread">{unread}</div>}
               </div>
             </div>
