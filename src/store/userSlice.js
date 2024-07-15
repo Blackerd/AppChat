@@ -7,7 +7,6 @@ const userSlice = createSlice({
     status: "",
   },
   reducers: {
-    // các actions
     setName: (state, action) => {
       state.infor.name = action.payload;
       state.status = "Auth";
@@ -17,14 +16,14 @@ const userSlice = createSlice({
       state.status = "Auth";
     },
     setFriends: (state, action) => {
-      const friend = {
-        name: action.payload.item.name,
-        listmessage: [],
-        type: action.payload.item.type,
-        actionTime: action.payload.item.actionTime,
+      const { name, type, actionTime } = action.payload.item;
+      const newFriend = {
+        name,
+        listmessage: [], // Initialize with an empty array for messages
+        type,
+        actionTime,
       };
-      state.infor.friends = [...state.infor.friends, friend];
-
+      state.infor.friends.push(newFriend);
       state.status = "Auth";
     },
     saveMessage: (state, action) => {
@@ -32,58 +31,61 @@ const userSlice = createSlice({
       const friendIndex = state.infor.friends.findIndex((f) => f.name === name);
       if (friendIndex !== -1) {
         const friend = state.infor.friends[friendIndex];
-        friend.messages = friend.messages ? [...friend.messages, mess] : [mess];
+        if (Array.isArray(mess)) {
+          mess.forEach(message => {
+            if (message && message.text && message.sender) { // Kiểm tra message tồn tại và có đủ thuộc tính
+              friend.listmessage.push({
+                text: message.text,
+                sender: message.sender,
+              });
+            }
+          });
+        } else {
+          if (mess && mess.text && mess.sender) { // Kiểm tra mess tồn tại và có đủ thuộc tính
+            friend.listmessage.push({
+              text: mess.text,
+              sender: mess.sender,
+            });
+          }
+        }
         state.infor.friends[friendIndex] = { ...friend };
       }
     },
 
+
+
+
     clearMessage: (state, action) => {
-      state.infor = {
-        ...state.infor,
-        friends: state.infor.friends.map((f) => {
-          if (f.name === action.payload.name) {
-            return {
-              ...f,
-              listmessage: [],
-            };
-          }
-          return f;
-        }),
-      };
+      const { name } = action.payload;
+      const friend = state.infor.friends.find((f) => f.name === name);
+      if (friend) {
+        friend.listmessage = []; // Clear messages for a specific friend
+      }
     },
     setGroups: (state, action) => {
-      const group = {
-        nameGroup: action.payload.item.name,
-        listmessage: [],
-        type: action.payload.item.type || 1,
-        actionTime: action.payload.item.actionTime || "",
+      const { name, type, actionTime } = action.payload.item;
+      const newGroup = {
+        nameGroup: name,
+        listmessage: [], // Initialize with an empty array for group messages
+        type: type || 1,
+        actionTime: actionTime || "",
       };
-      state.infor.groups = [...state.infor.groups, group];
+      state.infor.groups.push(newGroup);
       state.status = "Auth";
     },
     saveGroupMess: (state, action) => {
       const { nameGroup, messGroup } = action.payload;
-      const groupIndex = state.infor.groups.findIndex(
-          (g) => g.nameGroup === nameGroup
-      );
-      if (groupIndex !== -1) {
-        const group = state.infor.groups[groupIndex];
-        group.messages = group.messages
-            ? [...group.messages, messGroup]
-            : [messGroup];
-        state.infor.groups[groupIndex] = { ...group };
+      const group = state.infor.groups.find((g) => g.nameGroup === nameGroup);
+      if (group) {
+        group.listmessage.push(...messGroup); // Append new messages to group's message list
       }
     },
     clearGroupMess: (state, action) => {
-      state.infor = {
-        ...state.infor,
-        groups: state.infor.groups.map((item) => {
-          if (item.nameGroup === action.payload.nameGroup) {
-            return { ...item, listmessage: [] };
-          }
-          return item;
-        }),
-      };
+      const { nameGroup } = action.payload;
+      const group = state.infor.groups.find((g) => g.nameGroup === nameGroup);
+      if (group) {
+        group.listmessage = []; // Clear messages for a specific group
+      }
     },
     logout: (state, action) => {
       state.infor = { name: "", email: "", friends: [], groups: [] };
@@ -91,6 +93,7 @@ const userSlice = createSlice({
     },
   },
 });
+
 export const {
   setName,
   setEmail,
@@ -101,5 +104,6 @@ export const {
   saveGroupMess,
   clearGroupMess,
   logout,
-} = userSlice.actions; // log các action từ userSlice
+} = userSlice.actions;
+
 export default userSlice.reducer;

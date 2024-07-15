@@ -3,7 +3,7 @@
   height: 90vh;
   width: 90vw;
   display: flex;
-  background: #478CCF;
+  background: #365E32;
   justify-content: center;
   border-radius: 5px;
 }
@@ -15,7 +15,6 @@
   gap: 10px;
 }
 .home .content-container .list-container {
-  border-right: 1px solid #fff;
   padding: 10px;
   height: 100%;
   color: #ecf0f3;
