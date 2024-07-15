@@ -12,12 +12,7 @@ const History = () => {
     };
 
     const activities = [
-        { action: 'Đăng nhập', time: '12/05/2024 08:30 AM', browser: 'Chrome', device: 'Máy tính', ip: '111.111.111' },
-        { action: 'Đăng xuất', time: '20/05/2024 09:30 AM', browser: 'Firefox', device: 'Samsung J7-Prime', ip: '222.222.222' },
-        { action: 'Đăng nhập', time: '12/05/2023 09:30 AM', browser: 'Chrome', device: 'IPhone', ip: '222.222.222' },
-        { action: 'Đăng nhập', time: '12/05/2023 09:30 AM', browser: 'Brave', device: 'Máy tính', ip: '222.222.222' },
-        { action: 'Đăng xuất', time: '12/05/2023 09:30 AM', browser: 'Microsoft Edge', device: 'Máy tính', ip: '222.222.222' },
-    ];
+     ];
 
     const handleLogout = () => {
         localStorage.removeItem('token');
