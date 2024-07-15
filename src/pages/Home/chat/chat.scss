@@ -1,136 +1,148 @@
 .chatContainer {
   border-radius: 10px;
   display: grid;
-  grid-template-rows: auto 1fr auto; /* Thiết lập các hàng theo tỷ lệ auto, 1fr, auto */
-  max-width: 80%;
-  height: 100%; /* Đảm bảo chiều cao là 100% để nội dung không tràn ra ngoài */
+  grid-template-rows: auto 1fr auto;
+  background: #f5f7f8;
+  height: 90vh;
+  width: 90vw;
+}
 
-  .header {
+.header {
+  display: flex;
+  border-bottom: 1px solid #365e32;
+  .item {
+    flex: 1;
     display: flex;
-    .item {
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px;
+    gap: 10px;
+
+    .img {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+    }
+
+    .name {
       flex: 1;
       display: flex;
       align-items: center;
-      padding: 10px;
-      background: #c0d6e8;
-      border-radius: 10px;
-      margin: 5px;
-      gap: 10px;
+      justify-content: space-between;
 
-      .img {
-        width: 40px;
-        height: 40px;
-        cursor: pointer;
-
-        img {
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
-        }
-      }
-
-      .name {
-        flex: 1;
+      .info {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-
-        .info {
-          display: flex;
-          align-items: center;
-
-          span {
-            margin-right: 5px;
-          }
-        }
-
-        .icons {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-          cursor: pointer;
-
-          .icon {
-            &:hover {
-              color: #03aed2;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .main {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    overflow-y: auto;
-    max-height: 70vh;
-    scrollbar-width: thin;
-
-    .message {
-      padding: 10px;
-      border-radius: 10px;
-      max-width: 50%;
-
-      &.user {
-        background-color: #007bff;
-        color: white;
-        align-self: flex-end;
-      }
-    }
-  }
-
-  .footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #c0d6e8;
-    border-radius: 10px;
-    margin: 5px;
-    padding: 10px;
-    gap: 10px;
-
-    .input {
-      flex: 1;
-      padding: 8px;
-      border-radius: 5px;
-      border: none;
-      background: #fff;
-      box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
-    }
-
-    .sendItem {
-      display: flex;
-      gap: 10px;
-      font-size: 16px;
-
-      .icon {
-        cursor: pointer;
-
-        &:hover {
-          color: #03aed2;
-        }
-      }
-
-      .send {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        padding: 8px;
-        background: #1c1678;
-        border-radius: 5px;
-        color: #ecf0f3;
-        cursor: pointer;
 
         span {
-          font-weight: bold;
+          margin-right: 5px;
         }
+      }
 
-        &:hover {
-          background: #03aed2;
+      .icons {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        cursor: pointer;
+
+        .icon {
+          &:hover {
+            color: #03aed2;
+          }
         }
+      }
+    }
+  }
+}
+
+.main {
+  padding: 5px;
+  border-radius: 5px;
+  margin: 10px 10px 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+
+  .message {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 60%;
+    margin: 5px 0;
+    display: flex;
+    flex-direction: column;
+
+    &.user {
+      background-color: #294B29;
+      color: #f1f1f1;
+      align-self: flex-end;
+      border-top-right-radius: 0;
+    }
+
+    &.friend {
+      background-color: #597445;
+      color: #f1f1f1;
+      align-self: flex-start;
+      border-top-left-radius: 0;
+    }
+  }
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #c0d6e8;
+  border-radius: 10px;
+  margin: 5px;
+  padding: 10px;
+  gap: 10px;
+
+  .input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    background: #fff;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  .sendItem {
+    display: flex;
+    gap: 10px;
+    font-size: 16px;
+
+    .icon {
+      cursor: pointer;
+
+      &:hover {
+        color: #03aed2;
+      }
+    }
+
+    .send {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px;
+      background: #06D001;
+      border-radius: 5px;
+      color: #ecf0f3;
+      cursor: pointer;
+
+      span {
+        font-weight: bold;
+      }
+
+      &:hover {
+        background: #059212;
       }
     }
   }

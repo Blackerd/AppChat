@@ -9,7 +9,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #fff;
   padding: 0 5px 10px 5px;
 }
 .list .list_header .img {
@@ -46,6 +45,35 @@
 }
 .list .search .searchForm input::placeholder {
   color: #888;
+}
+.list .allbtn {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px;
+}
+.list .allbtn .btn {
+  flex: 1;
+  margin: 0 2px;
+  padding: 8px;
+  border: none;
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
+.list .allbtn .btn.left {
+  background-color: #4caf50;
+}
+.list .allbtn .btn.middle {
+  background-color: #2196f3;
+}
+.list .allbtn .btn.right {
+  background-color: #f44336;
+}
+.list .allbtn .btn:hover {
+  opacity: 0.9;
 }
 .list .chatList {
   flex: 1;

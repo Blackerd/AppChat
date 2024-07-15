@@ -1,3 +1,44 @@
+.messageContainer {
+  display: flex;
+  margin-bottom: 10px;
+}
 
+.messageBox {
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 60%;
+}
+
+.sent {
+  justify-content: flex-end;
+}
+
+.received {
+  justify-content: flex-start;
+}
+
+.sentMessage {
+  background-color: #294B29;
+  color: #f1f1f1;
+  align-self: flex-end;
+  border-top-right-radius: 0;
+}
+
+.receivedMessage {
+  background-color: #597445;
+  color: #f1f1f1;
+  align-self: flex-start;
+  border-top-left-radius: 0;
+}
+
+.messageText {
+  margin: 0;
+}
+
+.messageSender {
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+}
 
 /*# sourceMappingURL=message.css.map */
