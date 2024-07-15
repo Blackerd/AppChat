@@ -1,6 +1,5 @@
 .list {
-  background: #0e46a3;
-  margin: 10px 10px 10px 5px;
+  background: #96C9F4;
   border-radius: 10px;
   overflow: hidden;
   display: flex;
@@ -14,7 +13,6 @@
   display: none;
 }
 .list h1 {
-  color: aliceblue;
   margin-top: 30px;
   align-items: center;
   display: flex;

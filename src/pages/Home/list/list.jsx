@@ -16,63 +16,61 @@ import {
 import ShowGroup from "../../../components/group/showgroup/GroupShow";
 
 const List = (props) => {
-  const [isReady, respone, sender] = useContext(WebsocketContext);
+  const [isReady, response, sender] = useContext(WebsocketContext);
   const dispatch = useDispatch();
   const infor = useSelector((state) => state.reducer);
   const friends = infor.user.infor.friends;
   const groups = infor.user.infor.groups;
+  const currentUserEmail = infor.user.infor.email;
   const all = [...friends, ...groups];
 
-  // Lọc danh sách để giữ lại mỗi người hoặc nhóm chỉ một lần
-  const uniqueChatList = Array.from(
-    new Set(all.map((item) => (item.type === 0 ? item.name : item.nameGroup)))
-  ).map((name) => {
-    return all.find(
-      (item) => (item.type === 0 ? item.name : item.nameGroup) === name
-    );
+  // Lọc danh sách để chỉ hiển thị các đoạn chat của người dùng hiện tại với người khác
+  const filteredFriends = friends.filter((friend) => {
+    const lastMessage = friend.listmessage[friend.listmessage.length - 1];
+    return lastMessage && (lastMessage.isSentByUser || lastMessage.name !== currentUserEmail);
   });
 
   useEffect(() => {
-    if (respone) {
-      if (respone.status === "success") {
-        if (respone.event === "GET_PEOPLE_CHAT_MES") {
-          const data = respone.data;
+    if (response) {
+      if (response.status === "success") {
+        if (response.event === "GET_PEOPLE_CHAT_MES") {
+          const data = response.data;
           data.forEach((item) => {
             const { name, to, mes } = item;
-            const isSentByUser = name === infor.user.infor.email;
+            const isSentByUser = name === currentUserEmail;
             dispatch(
-              saveMessage({
-                name: isSentByUser ? to : name,
-                mess: { text: mes, isSentByUser },
-              })
+                saveMessage({
+                  name: isSentByUser ? to : name,
+                  mess: { text: mes, isSentByUser },
+                })
             );
           });
-        } else if (respone.event === "GET_ROOM_CHAT_MES") {
-          const data = respone.data.chatData;
+        } else if (response.event === "GET_ROOM_CHAT_MES") {
+          const data = response.data.chatData;
           data.forEach((item) => {
             const { name, mes } = item;
-            const isSentByUser = name === infor.user.infor.email;
+            const isSentByUser = name === currentUserEmail;
             dispatch(
-              saveGroupMess({
-                nameGroup: respone.data.name,
-                messGroup: { text: mes, isSentByUser },
-              })
+                saveGroupMess({
+                  nameGroup: response.data.name,
+                  messGroup: { text: mes, isSentByUser },
+                })
             );
           });
         }
       }
     }
-  }, [respone]);
+  }, [response]);
 
   const handleGetPeopleChatMess = (payload) => {
     payload.data.forEach((item) => {
       const { name, to, mes } = item;
-      const isSentByUser = name === infor.user.infor.email;
+      const isSentByUser = name === currentUserEmail;
       dispatch(
-        saveMessage({
-          name: isSentByUser ? to : name,
-          mess: { text: mes, isSentByUser },
-        })
+          saveMessage({
+            name: isSentByUser ? to : name,
+            mess: { text: mes, isSentByUser },
+          })
       );
     });
   };
@@ -80,18 +78,17 @@ const List = (props) => {
   const handleGetRoomChatMess = (payload) => {
     payload.data.chatData.forEach((item) => {
       const { name, mes } = item;
-      const isSentByUser = name === infor.user.infor.email;
+      const isSentByUser = name === currentUserEmail;
       dispatch(
-        saveGroupMess({
-          nameGroup: respone.data.name,
-          messGroup: { text: mes, isSentByUser },
-        })
+          saveGroupMess({
+            nameGroup: response.data.name,
+            messGroup: { text: mes, isSentByUser },
+          })
       );
     });
   };
 
   const handleSendChat = (payload) => {
-    console.log(payload);
     const check = friends.every((item) => item.name !== payload.data.name);
     if (check) {
       const item = { name: payload.data.name, type: 0, actionTime: "" };
@@ -101,22 +98,22 @@ const List = (props) => {
   };
 
   useEffect(() => {
-    if (respone && respone.status === "success") {
-      switch (respone.event) {
+    if (response && response.status === "success") {
+      switch (response.event) {
         case "SEND_CHAT":
-          handleSendChat(respone);
+          handleSendChat(response);
           break;
         case "GET_PEOPLE_CHAT_MES":
-          handleGetPeopleChatMess(respone);
+          handleGetPeopleChatMess(response);
           break;
         case "GET_ROOM_CHAT_MES":
-          handleGetRoomChatMess(respone);
+          handleGetRoomChatMess(response);
           break;
         default:
           break;
       }
     }
-  }, [respone]);
+  }, [response]);
 
   const handleItemOnClick = (item) => {
     if (item.type === 0) {
@@ -132,32 +129,29 @@ const List = (props) => {
   };
 
   return (
-    <div className="list">
-      <h1>Chat</h1>
-      <Search />
-      <div className="chatList">
-        {uniqueChatList &&
-          uniqueChatList.map((item) => {
-            return item.type === 0 ? (
-              <Friend
-                key={item.name}
-                img={item.img}
-                name={item.nameGroup || item.name}
-                time={item.time}
-                message={item.message}
-                unread={item.unread}
-                onClick={() => handleItemOnClick(item)}
-              />
-            ) : (
-              <ShowGroup
-                key={item.nameGroup}
-                nameGroup={item.nameGroup}
-                onClick={() => handleItemOnClick(item)}
-              />
-            );
-          })}
+      <div className="list">
+        <h1>Chat</h1>
+        <Search />
+        <div className="chatList">
+          {filteredFriends &&
+              filteredFriends.map((item) => {
+                const lastMessage = item.listmessage[item.listmessage.length - 1];
+                const isCurrentUser = lastMessage && lastMessage.isSentByUser;
+                return (
+                    <Friend
+                        key={item.name}
+                        img={item.img}
+                        name={item.name}
+                        lastMessage={lastMessage.text}
+                        lastMessageTime={lastMessage.time}
+                        unread={item.unread}
+                        onClick={() => handleItemOnClick(item)}
+                        isCurrentUser={isCurrentUser}
+                    />
+                );
+              })}
+        </div>
       </div>
-    </div>
   );
 };
 

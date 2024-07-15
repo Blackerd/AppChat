@@ -1,60 +1,85 @@
-.friend{
-  .friendItem{
+.friend {
+  .friendItem {
     display: flex;
     flex-direction: column;
-    .item{
+
+    .item {
       display: flex;
       align-items: center;
-        padding: 5px;
-      margin: 5px;
-      background: #C0D6E8;
+      padding: 10px;
+      margin: 10px;
+      background: #c0d6e8;
       border-radius: 10px;
       width: 250px;
-      .img{
+
+      .img {
         width: 40px;
         height: 40px;
-        img{
+        overflow: hidden;
+        border-radius: 50%;
+        flex-shrink: 0;
+
+        img {
           width: 100%;
           height: 100%;
-          border-radius: 50%;
+          object-fit: cover;
         }
       }
-      .name{
+
+      .name {
         flex: 1;
         margin-left: 10px;
         display: flex;
         flex-direction: column;
-        .info{
+
+        .info {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin: 0;
-          padding: 0;
+          margin-bottom: 5px;
 
+          span {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
         }
-        .text{
-          margin-top: 15px;
+
+        .text {
           display: flex;
-        }
-        .unread {
-          background-color: #ff6347;
-          color: white;
-          padding: 2px 8px;
-          border-radius: 12px;
-          font-size: 12px;
-          display: inline-block;
-          margin-left: auto;
+          align-items: center;
+
+          span {
+            font-size: 12px;
+            color: #666;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+
+          .unread {
+            background-color: #ff6347;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            margin-left: auto;
+          }
         }
       }
-      &:hover{
-        background: #03AED2;
+
+      &:hover {
+        background: #03aed2;
         cursor: pointer;
-        .name{
-          .info{
-            .text{
-              span{
-                color: #ffffff;
-              }
+
+        .name {
+          .info {
+            span {
+              color: #fff;
             }
           }
         }
