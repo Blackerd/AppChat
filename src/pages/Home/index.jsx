@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import Menu from "./menu/menu";
 import List from "./list/list";
 import "./home.css";
 import Chat from "./chat/chat";
@@ -73,34 +72,29 @@ function Home() {
   };
 
   return (
-      <div className="home">
-        <div className="home-container">
-          <div className="navMenu">
-            <Menu name={name} />
-          </div>
-          <div className="content-container">
-            <div className="list-container">
-              <List
-                  setChatUser={handleSetSelectedUser}
-                  handleDeleteFillInput={handleDeleteFillInput}
-              />
+        <div className="home">
+            <div className="content-container">
+              <div className="list-container">
+                <List
+                    setChatUser={handleSetSelectedUser}
+                    handleDeleteFillInput={handleDeleteFillInput}
+                />
+              </div>
+              <div className="chat-container">
+                {selectedUser ? (
+                    selectedUser.type === 0 ? (
+                        <Chat friend={selectedUser} ref={inputFillGroup} />
+                    ) : (
+                        <GroupComponent group={selectedUser} ref={inputFillGroup} />
+                    )
+                ) : (
+                    <div className="empty-chat">
+                      Trống
+                    </div>
+                )}
+              </div>
             </div>
-            <div className="chat-container">
-              {selectedUser ? (
-                  selectedUser.type === 0 ? (
-                      <Chat friend={selectedUser} ref={inputFillGroup} />
-                  ) : (
-                      <GroupComponent group={selectedUser} ref={inputFillGroup} />
-                  )
-              ) : (
-                  <div className="empty-chat">
-                    Trống
-                  </div>
-              )}
-            </div>
-          </div>
         </div>
-      </div>
   );
 }
 

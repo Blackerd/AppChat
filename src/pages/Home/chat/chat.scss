@@ -1,5 +1,4 @@
 .chatContainer {
-  background-color: #f5f5f5;
   border-radius: 10px;
   display: grid;
   grid-template-rows: auto 1fr auto; /* Thiết lập các hàng theo tỷ lệ auto, 1fr, auto */
@@ -7,7 +6,9 @@
   height: 100%; /* Đảm bảo chiều cao là 100% để nội dung không tràn ra ngoài */
 
   .header {
+    display: flex;
     .item {
+      flex: 1;
       display: flex;
       align-items: center;
       padding: 10px;
