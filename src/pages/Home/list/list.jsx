@@ -1,20 +1,14 @@
-import React, { useContext, useEffect } from "react";
-import Search from "../search/search";
+import React, { useContext, useEffect, useState } from "react";
 import Friend from "../friend/friend";
 import "./list.css";
 import { useDispatch, useSelector } from "react-redux";
 import { WebsocketContext } from "../../../socket/WebsocketContent";
-import { GET_PEOPLE_CHAT_MES, GET_ROOM_CHAT_MES } from "../../../api/action";
-import {
-  clearGroupMess,
-  clearMessage,
-  setGroups,
-  saveMessage,
-  saveGroupMess,
-} from "../../../store/userSlice";
+import { GET_PEOPLE_CHAT_MES, GET_ROOM_CHAT_MES, Logout, SEND_CHAT, CREATE_ROOM, JOIN_ROOM } from "../../../api/action";
+import { clearGroupMess, clearMessage, setGroups, saveMessage, saveGroupMess, logout, setFriends } from "../../../store/userSlice";
 import ShowGroup from "../../../components/group/showgroup/GroupShow";
-import { setFriends } from "../../../store/userSlice";
-import { SEND_CHAT } from "../../../api/action";
+import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRightFromBracket, faMessage } from "@fortawesome/free-solid-svg-icons";
 
 const List = (props) => {
   const [isReady, respone, sender] = useContext(WebsocketContext);
@@ -22,10 +16,21 @@ const List = (props) => {
   const infor = useSelector((state) => state.reducer);
   const friends = infor.user.infor.friends;
   const groups = infor.user.infor.groups;
+  const userInfo = infor.user.infor; // Thêm dòng này để lấy thông tin người dùng
   const all = [...friends, ...groups];
+  const [, , sendJsonMessage] = useContext(WebsocketContext);
+  const navigate = useNavigate(); // Sử dụng useNavigate thay vì useHistory
+  const [name, setName] = useState("");
+
+  const handleLogout = () => {
+    const logoutAction = Logout(); // Hành động logout từ API
+    sendJsonMessage(logoutAction); // Gửi yêu cầu logout qua WebSocket
+    dispatch(logout());
+    // Chuyển hướng về trang đăng nhập
+    navigate("/");
+  };
 
   const handleItemOnClick = (item) => {
-    // props.handleDeleteFillInput();
     if (item.type === 0) {
       dispatch(clearMessage({ name: item.name }));
       const get_people_chat_mess = GET_PEOPLE_CHAT_MES(item.name);
@@ -87,20 +92,68 @@ const List = (props) => {
     }
   }, [respone]);
 
-  // Lọc và nhóm tin nhắn theo người nhận
-  // const filteredList = {};
-
-  // all.forEach((item) => {
-  //   const key = item.nameGroup || item.name;
-  //   if (!filteredList[key]) {
-  //     filteredList[key] = item;
-  //   }
-  // });
+  const findfriend = () => {
+    let value = name;
+    const send_chat = SEND_CHAT(value, "add friend");
+    setName((pre) => "");
+    sender(send_chat);
+  };
+  const joingroup = () => {
+    let value = name;
+    const join_room = JOIN_ROOM(value);
+    setName((pre) => "");
+    sender(join_room);
+  };
+  const creategroup = () => {
+    let value = name;
+    const create_room = CREATE_ROOM(value);
+    setName((pre) => "");
+    sender(create_room);
+  };
 
   return (
       <div className="list">
-        <h1>Chat</h1>
-        <Search />
+        <div className="list_header">
+          <div className="img">
+            <Link to="/info">
+              <img
+                  src="https://www.w3schools.com/howto/img_avatar.png"
+                  alt="avatar"
+              />
+            </Link>
+            <div className="name">
+              <span>{userInfo.name}</span>
+            </div>
+          </div>
+          <div className="item log-out" onClick={handleLogout}>
+            <div className="icon">
+              <FontAwesomeIcon icon={faArrowRightFromBracket} />
+            </div>
+          </div>
+        </div>
+        <div className="search">
+          <div className="searchForm">
+            <input
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+                value={name}
+                type="text"
+                placeholder="Search..."
+            />
+          </div>
+        </div>
+        <div className="allbtn">
+          <button className="btn left" onClick={findfriend}>
+            FIND FRIEND
+          </button>
+          <button className="btn right" onClick={joingroup}>
+            JOIN GROUP
+          </button>
+          <button className="btn middle" onClick={creategroup}>
+            CREATE GROUP
+          </button>
+        </div>
         <div className="chatList">
           {all &&
               all.map((item) => {
