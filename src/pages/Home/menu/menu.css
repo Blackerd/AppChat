@@ -3,7 +3,7 @@
   padding: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-right: 1px solid #ddd;
-  height: 90%;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -11,6 +11,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
 }
 .aside .menu .img {
   margin-bottom: 20px;
@@ -23,13 +24,21 @@
 }
 .aside .menu .menu-items {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
 }
 .aside .menu .menu-items .item {
+  width: 100%;
   display: flex;
   align-items: center;
   padding: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+.aside .menu .menu-items .item:hover {
+  background-color: #e0e0e0;
 }
 .aside .menu .menu-items .item .icon {
   margin-right: 10px;
@@ -41,6 +50,15 @@
 .aside .menu .menu-items .log-out {
   color: #f44336;
   cursor: pointer;
+}
+.aside .menu .menu-items .log-out:hover {
+  background-color: #ffebee;
+}
+
+@media (max-width: 768px) {
+  .aside .menu .menu-items .item {
+    padding: 8px;
+  }
 }
 
 /*# sourceMappingURL=menu.css.map */
