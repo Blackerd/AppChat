@@ -1,12 +1,17 @@
 import styles from './styles.module.css';
-import { useNavigate } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import React from "react";
 import {FaArrowLeft} from "react-icons/fa";
+import { useSelector } from 'react-redux'; // Import useSelector
 
 
 function Information() {
 
     const navigate = useNavigate();
+    // Lấy thông tin người dùng từ Redux store
+    // useSelector để truy cập state của Redux, trong trường hợp này là thông tin người dùng
+    const user = useSelector((state) => state.user?.infor || {});
+    console.log(user); // Xem giá trị của user để xác nhận thông tin
 
     const handleLogout = () => {
 
@@ -44,6 +49,10 @@ function Information() {
 
     }
 
+    // Định nghĩa hàm maskPassword
+    const maskPassword = (password) => {
+        return '*'.repeat(password.length);
+    };
 
 
 
@@ -90,16 +99,11 @@ function Information() {
                 <div className={styles['title-info']}>
                     <h3>Thông tin đăng nhập</h3>
                     <div className={styles['info-item']}>
-                        <label htmlFor="number">Số điện thoại :</label>
-                        <button onClick={changeNumber}>Thay đổi</button>
+                        <label htmlFor="number">Tài khoản :</label>
                     </div>
                     <div className={styles['info-item']}>
-                        <label htmlFor="password">Mật khẩu :</label>
+                        <label htmlFor="password">Mật khẩu : </label>
                         <button onClick={changePassword}>Thay đổi</button>
-                    </div>
-                    <div className={styles['info-item']} >
-                        <label htmlFor="email" >Email :</label>
-                        <button onClick={changeEmail}>Thay đổi</button>
                     </div>
                 </div>
                 <div className={styles['title-info']}>
