@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Menu from "./menu/menu";
 import List from "./list/list";
 import "./home.css";
@@ -9,45 +9,47 @@ import { logout, setFriends, setGroups } from "../../store/userSlice";
 import { RE_LOGIN, GET_PEOPLE_CHAT_MES } from "../../api/action";
 import GroupComponent from "../../components/group/GroupComponent";
 import { useNavigate } from "react-router-dom";
+
 function Home() {
-  const [isReady, respone, sender] = useContext(WebsocketContext);
-  // ==> ko được xóa
+  const [isReady, response, sender] = useContext(WebsocketContext);
   const dispatch = useDispatch();
   const nav = useNavigate();
 
   const infor = useSelector((state) => state.reducer);
   if (infor.user.status !== "Auth") nav("/");
+
   const [name, setName] = useState("");
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const handleCreateRoom = (payload) => {
     const item = { name: payload.data.name, type: 1, actionTime: "" };
     dispatch(setGroups({ item }));
   };
-  const hanldeGetUserList = (payload) => {
+
+  const handleGetUserList = (payload) => {
     payload.data.forEach((item) => {
       return item.type === 0
-        ? dispatch(setFriends({ item }))
-        : dispatch(setGroups({ item }));
+          ? dispatch(setFriends({ item }))
+          : dispatch(setGroups({ item }));
     });
   };
 
   useEffect(() => {
-    // setName
     setName(infor.user.infor.name);
-    if (respone && respone.status === "success") {
-      switch (respone.event) {
+    if (response && response.status === "success") {
+      switch (response.event) {
         case "GET_USER_LIST":
-          hanldeGetUserList(respone);
+          handleGetUserList(response);
           break;
         case "JOIN_ROOM":
         case "CREATE_ROOM":
-          handleCreateRoom(respone);
+          handleCreateRoom(response);
           break;
         default:
           break;
       }
-    } else if (respone && respone.status === "error") {
-      switch (respone.event) {
+    } else if (response && response.status === "error") {
+      switch (response.event) {
         case "JOIN_ROOM":
           alert("Room not exist");
           break;
@@ -55,33 +57,48 @@ function Home() {
           break;
       }
     }
-  }, [respone]);
+  }, [response]);
 
-  /**
-   *không được xóa dòng trên !!!! ==>
-   */
+  useEffect(() => {
+    // Chọn người đầu tiên trong danh sách để nhắn tin khi danh sách được load lên
+    if (infor.user.infor.friends.length > 0 && !selectedUser) {
+      setSelectedUser(infor.user.infor.friends[0]);
+    }
+  }, [infor.user.infor.friends]);
 
-  const [selected, setSelected] = useState(null);
   const inputFillGroup = useRef();
+
   const handleDeleteFillInput = () => {
     if (inputFillGroup.current) {
       inputFillGroup.current.clearInput();
     }
   };
+
   return (
-    <div className="container">
-      <Menu name={name}></Menu>
-      <List
-        setChatUser={setSelected}
-        handleDeleteFillInput={handleDeleteFillInput}
-      ></List>
-      {selected &&
-        (selected.type === 0 ? (
-          <Chat friend={selected} ref={inputFillGroup} />
-        ) : (
-          <GroupComponent group={selected} ref={inputFillGroup} />
-        ))}
-    </div>
+      <div className={"home"}>
+        <div className="home-container">
+          <div className={"navMenu"}>
+            <Menu name={name} />
+          </div>
+          <div className="content-container">
+            <div className="list-container">
+              <List
+                  setChatUser={setSelectedUser}
+                  handleDeleteFillInput={handleDeleteFillInput}
+              />
+            </div>
+            <div className="chat-container">
+              {selectedUser && selectedUser.type === 0 && (
+                  <Chat friend={selectedUser} ref={inputFillGroup} />
+              )}
+              {selectedUser && selectedUser.type !== 0 && (
+                  <GroupComponent group={selectedUser} ref={inputFillGroup} />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
   );
 }
+
 export default Home;

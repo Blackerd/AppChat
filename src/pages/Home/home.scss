@@ -1,9 +1,32 @@
-.container{
-  display: grid;
-  background: #7EA1FF;
-height: 100vh;
-  width: 100%;
-    grid-template-columns: 0.6fr  1fr 3fr;
+  .home {
+    box-sizing: border-box;
+    height: 100vh;
+    width: 100%;
+    background-color: #071952;
+    display: flex;
+    justify-content: center;
+    .home-container {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      max-width: 100%;
+      .navMenu {
+        flex: 250px;
+        width: 50%;
+        margin: 0 ;
+        height: 100%;
+      }
+      .content-container {
+        flex: 1;
+        background-color: #e0e0e0;
+        display: flex;
 
-
-}
+        .list-container{
+          flex: 250px;
+          width: 50%;
+          margin: 0 ;
+          height: 100%;
+        }
+      }
+    }
+  }
