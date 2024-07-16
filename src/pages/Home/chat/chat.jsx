@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { saveMessage } from "../../../store/userSlice";
 import Message from "../message/message";
 import IconsPicker from "react-icons-picker";
+import EmojiPicker from "emoji-picker-react";
 
 const Chat = (props, ref) => {
   const [isReady, respone, sender] = useContext(WebsocketContext);
@@ -17,7 +18,7 @@ const Chat = (props, ref) => {
   const [currentFriend, setCurrentFriend] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [showIconPicker, setShowIconPicker] = useState(false); // State để quản lý hiển thị bảng chọn icon
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // State để quản lý hiển thị bảng chọn emoji
 
   useEffect(() => {
     setCurrentFriend(friends.find((item) => item.name === props.friend.name));
@@ -107,13 +108,16 @@ const Chat = (props, ref) => {
     },
   }));
 
-  const handleIconPickerToggle = () => {
-    setShowIconPicker(!showIconPicker); // Đảo ngược trạng thái hiển thị của bảng chọn icon
+  const handleEmojiSelect = (event, emojiObject) => {
+    const { emoji } = emojiObject;
+    sender(SEND_CHAT(props.friend.name, emoji)); // Gửi emoji đến server
+    setShowEmojiPicker(false); // Đóng bảng chọn emoji sau khi chọn xong
   };
 
-    const handleIconSelect = (icon) => {
-      sender(SEND_CHAT(props.friend.name, icon)); // Gửi icon được chọn đến server
-    }
+  const handleEmojiPickerToggle = () => {
+    setShowEmojiPicker(!showEmojiPicker); // Đảo ngược trạng thái hiển thị của bảng chọn emoji
+  };
+
 
   return (
       <div className="chatContainer">
@@ -151,14 +155,14 @@ const Chat = (props, ref) => {
               ref={inputRef}
           />
           <div className="sendItem">
-            <FontAwesomeIcon className="icon" icon={faFaceSmile}  onClick={handleIconPickerToggle} />
+            <FontAwesomeIcon className="icon" icon={faFaceSmile} onClick={handleEmojiPickerToggle} />
             <FontAwesomeIcon className="icon" icon={faPaperclip} />
             <div className="send" onClick={handleSendMessages}>
               <span>Gửi</span>
             </div>
           </div>
-          {showIconPicker && (
-              <IconsPicker onSelect={handleIconSelect} closePicker={handleIconPickerToggle} />
+          {showEmojiPicker && (
+              <EmojiPicker onEmojiClick={handleEmojiSelect} />
           )}
         </div>
       </div>
