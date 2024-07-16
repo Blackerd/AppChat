@@ -9,17 +9,19 @@ const Message = ({ text, sender, isSentByUser, img }) => {
         if (messageRef.current) {
             messageRef.current.scrollIntoView({ behavior: "smooth" });
         }
-    }, []);
+    }, [text]); // Theo dõi thay đổi của tin nhắn để cuộn tới tin nhắn mới
 
     return (
         <div ref={messageRef} className={`messageContainer ${isSentByUser ? "sent" : "received"}`}>
+            {/* Hiển thị avatar của người gửi tin nhắn đối phương */}
+            {!isSentByUser && (
+                <div className="avatar">
+                    <img src="img/p1.jpg" alt="avatar"/>
+                </div>
+            )}
             <div className={`messageBox ${isSentByUser ? "sentMessage" : "receivedMessage"}`}>
-                {!isSentByUser && (
-                    <div className="avatar">
-                        <img src="img/p1.jpg" alt="avatar"/>
-                    </div>
-                )}
                 <p className="messageText">{text}</p>
+                {/* Hiển thị tên người gửi tin nhắn đối phương */}
                 {!isSentByUser && <p className="messageSender">{sender}</p>}
             </div>
         </div>

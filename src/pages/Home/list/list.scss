@@ -91,13 +91,8 @@
     flex: 1;
     overflow-y: auto;
     padding: 10px;
-
-    /* Tối ưu hóa cho thanh cuộn */
-    &::-webkit-scrollbar {
-      display: none; /* Ẩn thanh cuộn trên Chrome/Safari */
-    }
-    scrollbar-width: none; /* Ẩn thanh cuộn trên Firefox */
-    -ms-overflow-style: none; /* Ẩn thanh cuộn trên IE/Edge */
+    flex-direction: column;
+    scrollbar-width: thin;
   }
 
   h1 {

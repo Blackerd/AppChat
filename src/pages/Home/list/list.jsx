@@ -28,27 +28,25 @@ const List = (props) => {
     dispatch(logout());
     navigate("/");
   };
-// hàm này sẽ xử lý khi click vào 1 item trong list
+// hàm này sẽ xử lý khi click vào 1 người bạn và hiện ra tin nhắn giữa 2 người
   const handleItemOnClick = (item) => {
-    if (item.type === 0) {
-      // Không cần xóa tin nhắn cũ ở đây nữa
-      const get_people_chat_mess = GET_PEOPLE_CHAT_MES(item.name);
-      sender(get_people_chat_mess);
+    if (item.type === 0) { // nếu là người bạn
+      const getPeopleChatMess = GET_PEOPLE_CHAT_MES(item.name); // lấy tin nhắn giữa 2 người
+      sender(getPeopleChatMess); // gửi yêu cầu lấy tin nhắn giữa 2 người
+      console.log(getPeopleChatMess)
     } else if (item.type === 1) {
-      // Không cần xóa tin nhắn của nhóm ở đây nữa
-      const get_room_chat_mess = GET_ROOM_CHAT_MES(item.nameGroup);
-      sender(get_room_chat_mess);
+      const getRoomChatMess = GET_ROOM_CHAT_MES(item.nameGroup);
+      sender(getRoomChatMess);
     }
-    // setChatUser sẽ lưu thông tin của người dùng hoặc nhóm chat hiện tại
     props.setChatUser(item);
   };
 
 
-// hàm này sẽ xử lý khi nhận được tin nhắn từ server
+// hàm này sẽ xử lý khi nhận được tin nhắn từ server thông qua hàm sender
   const handleGetPeopleChatMess = (payload) => {
     payload.data.forEach((item) => { // duyệt qua từng tin nhắn
       const { name, to, mes } = item;
-      const isSentByUser = name === infor.user.infor.email;
+      const isSentByUser = name === infor.user.infor.email; // kiểm tra xem người gửi có phải là người dùng hiện tại không
       dispatch(
           saveMessage({
             name: isSentByUser ? to : name, // nếu là người gửi thì lưu tên người nhận, ngược lại lưu tên người gửi
@@ -57,6 +55,7 @@ const List = (props) => {
       );
     });
   };
+
 
   const handleGetRoomChatMess = (payload) => {
     payload.data.chatData.forEach((item) => {
@@ -118,6 +117,16 @@ const List = (props) => {
     sender(create_room);
   };
 
+  const getLatestMessage = (name) => {
+    // Lấy tin nhắn cuối cùng của người dùng với người khác
+    const friend = friends.find((f) => f.name === name); // Tìm kiếm thông tin người dùng trong danh sách bạn bè
+    if (friend) {
+      const latestMessage = friend.listmessage[friend.listmessage.length - 1]; // Lấy tin nhắn cuối cùng
+      return latestMessage ? latestMessage.text : "";
+    }
+    return "";
+
+  };
   return (
       <div className="list">
         <div className="list_header">
@@ -168,7 +177,7 @@ const List = (props) => {
                         img={item.img}
                         name={item.nameGroup || item.name}
                         time={item.time}
-                        message={item.message}
+                        message={getLatestMessage(item.name)}
                         unread={item.unread}
                         onClick={() => handleItemOnClick(item)}
                     />
