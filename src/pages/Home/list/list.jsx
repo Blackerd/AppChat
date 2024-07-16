@@ -118,15 +118,36 @@ const List = (props) => {
   };
 
   const getLatestMessage = (name) => {
-    // Lấy tin nhắn cuối cùng của người dùng với người khác
-    const friend = friends.find((f) => f.name === name); // Tìm kiếm thông tin người dùng trong danh sách bạn bè
-    if (friend) {
-      const latestMessage = friend.listmessage[friend.listmessage.length - 1]; // Lấy tin nhắn cuối cùng
-      return latestMessage ? latestMessage.text : "";
-    }
-    return "";
+    let latestMessage = "";
 
+    // Tìm kiếm bạn bè có tên là 'name'
+    const friend = friends.find((f) => f.name === name);
+    if (friend) {
+      const lastMessage = friend.listmessage[friend.listmessage.length - 1];
+      if (lastMessage) {
+        // Kiểm tra xem tin nhắn được gửi bởi người dùng hiện tại hay không
+        const isSentByUser = lastMessage.sender === userInfo.name;
+        // Tạo chuỗi tin nhắn dựa trên người gửi và người nhận
+        latestMessage = `${isSentByUser ? "Bạn" : lastMessage.sender}: ${lastMessage.text }`;
+
+      }
+    }
+
+    // Tìm kiếm nhóm có tên là 'name'
+    const group = groups.find((g) => g.nameGroup === name);
+    if (group) {
+      const lastMessage = group.listmessage[group.listmessage.length - 1];
+      if (lastMessage) {
+        // Kiểm tra xem tin nhắn được gửi bởi người dùng hiện tại hay không
+        const isSentByUser = lastMessage.sender === userInfo.name;
+        // Tạo chuỗi tin nhắn dựa trên người gửi và người nhận
+        latestMessage = `${isSentByUser ? "Bạn" : lastMessage.sender}: ${lastMessage.text}`;
+      }
+    }
+
+    return latestMessage;
   };
+
   return (
       <div className="list">
         <div className="list_header">
@@ -158,21 +179,25 @@ const List = (props) => {
         </div>
         <div className="allbtn">
           <button className="btn left" onClick={findfriend}>
-            FIND FRIEND
+            Tìm bạn
           </button>
           <button className="btn right" onClick={joingroup}>
-            JOIN GROUP
+            Vào nhóm
           </button>
           <button className="btn middle" onClick={creategroup}>
-            CREATE GROUP
+            Tạo nhóm
           </button>
         </div>
         <div className="chatList">
-          {all &&
-              all.map((item, index) => {
-                const uniqueKey = item.type === 0 ? `friend-${item.name}` : `group-${item.nameGroup}`;
-                return item.type === 0 ? (
-                    <Friend
+          {all
+              &&
+              all
+                  .filter((item) => item.type !== 0 || item.name !== userInfo.name) // Lọc ra những người không phải là người dùng hiện tại
+                  .filter((item) => item.type !== 1)
+                  .map((item, index) => {
+                    const uniqueKey = item.type === 0 ? `friend-${item.name}` : `group-${item.nameGroup}`;
+                    return item.type === 0 ? (
+                        <Friend
                         key={uniqueKey}
                         img={item.img}
                         name={item.nameGroup || item.name}

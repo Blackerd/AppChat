@@ -62,7 +62,7 @@ const userSlice = createSlice({
       const { name, type, actionTime } = action.payload.item;
       const newGroup = {
         nameGroup: name,
-        listmessage: [], // Initialize with an empty array for group messages
+        listmessage: [],
         type: type || 1,
         actionTime: actionTime || "",
       };

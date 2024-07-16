@@ -3,16 +3,15 @@
   height: 90vh;
   width: 90vw;
   display: flex;
-  background: #365E32;
+  background: rgba(54, 94, 50, 0.5);
   justify-content: center;
-  border-radius: 5px;
+  border-radius: 6px;
 }
 .home .content-container {
   display: grid;
   grid-template-columns: 30% 70%;
   height: 100%;
   width: 100%;
-  gap: 10px;
 }
 .home .content-container .list-container {
   padding: 10px;

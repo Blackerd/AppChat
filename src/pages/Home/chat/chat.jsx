@@ -13,7 +13,7 @@ import EmojiPicker from "emoji-picker-react";
 const Chat = (props, ref) => {
   const [isReady, respone, sender] = useContext(WebsocketContext);
   const dispatch = useDispatch();
-  const { email } = useSelector((state) => state.reducer.user.infor); // Lấy email người đang đăng nhập
+  const { name: loggedInUserName } = useSelector((state) => state.reducer.user.infor); // Lấy email người đang đăng nhập
   const { friends } = useSelector((state) => state.reducer.user.infor);
   const [currentFriend, setCurrentFriend] = useState(null);
   const [newMessage, setNewMessage] = useState("");
@@ -21,7 +21,8 @@ const Chat = (props, ref) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false); // State để quản lý hiển thị bảng chọn emoji
 
   useEffect(() => {
-    setCurrentFriend(friends.find((item) => item.name === props.friend.name));
+    const friend = friends.find((item) => item.name === props.friend.name);
+    setCurrentFriend(friend);
   }, [props.friend, friends]);
 
   const handleGetPeopleChatMess = (payload) => {
@@ -31,14 +32,15 @@ const Chat = (props, ref) => {
     }));
 
     // Debugging to check email and message sender
-    console.log("Current User Email:", currentFriend.name);
+    console.log("Logged In User Name:", loggedInUserName);
+    console.log("Current Friend Name:", currentFriend?.name); // Đây là người bạn hiện tại mà bạn đang chat cùng
     console.log("Messages from Server:", listmess);
 
     // Lọc và cập nhật tin nhắn cho đúng với người đang đăng nhập và đối phương
     const filteredMessages = listmess.map((item) => ({
       text: item.text,
       // kiểm tra tin nhắn có phải của người gửi không
-      isSentByUser: item.sender === currentFriend.name,
+      isSentByUser: item.sender === loggedInUserName,
     }));
     // Lưu tin nhắn vào danh sách tin nhắn của người dùng
     dispatch(saveMessage({
@@ -52,13 +54,13 @@ const Chat = (props, ref) => {
 
 
   const handleSendChatResponse = (payload) => {
-    const isSentByUser = payload.data.name === email;
+    const isSentByUser = payload.data.name === loggedInUserName; // Kiểm tra xem tin nhắn có phải của người gửi không
     console.log(`New Message: ${payload.data.mes}, Sender: ${payload.data.name}, isSentByUser: ${isSentByUser}`);
     const newChat = [
       ...messages,
       {
         text: payload.data.mes,
-        isSentByUser: payload.data.name === email,
+        isSentByUser: payload.data.name === loggedInUserName, // Kiểm tra xem tin nhắn có phải của người gửi không
       },
     ];
     setMessages(newChat);

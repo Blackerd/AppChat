@@ -1,5 +1,5 @@
 .chatContainer {
-  border-radius: 10px;
+  border-radius: 0 10px 10px 0;
   display: grid;
   grid-template-rows: auto 1fr auto;
   background: #f5f7f8;
@@ -54,7 +54,7 @@
 
         .icon {
           &:hover {
-            color: #03aed2;
+            color: #1A5319;
           }
         }
       }
@@ -69,7 +69,7 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  scrollbar-width: thin;
+  scrollbar-width: none;
 
   .message {
     padding: 10px;
@@ -99,10 +99,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #c0d6e8;
+  background: #ecf0f3;
   border-radius: 10px;
   margin: 5px;
-  padding: 10px;
   gap: 10px;
 
   .input {
@@ -110,8 +109,10 @@
     padding: 10px;
     border-radius: 5px;
     border: none;
-    background: #fff;
+    background: #8E3E63;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+    color: #ecf0f3;
+    font-size: 13px;
 
   }
 
@@ -134,16 +135,17 @@
       align-items: center;
       gap: 5px;
       padding: 10px 20px 10px 20px;
-      background: #06D001;
+      background: #8E3E63;
       border-radius: 5px;
       color: #ecf0f3;
       cursor: pointer;
+      font-size: 13px;
       span {
         font-weight: bold;
       }
 
       &:hover {
-        background: #059212;
+        background: #FF7777;
       }
     }
   }
