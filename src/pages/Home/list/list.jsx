@@ -16,45 +16,48 @@ const List = (props) => {
   const infor = useSelector((state) => state.reducer);
   const friends = infor.user.infor.friends;
   const groups = infor.user.infor.groups;
-  const userInfo = infor.user.infor; // Thêm dòng này để lấy thông tin người dùng
+  const userInfo = infor.user.infor;
   const all = [...friends, ...groups];
   const [, , sendJsonMessage] = useContext(WebsocketContext);
-  const navigate = useNavigate(); // Sử dụng useNavigate thay vì useHistory
+  const navigate = useNavigate();
   const [name, setName] = useState("");
 
   const handleLogout = () => {
-    const logoutAction = Logout(); // Hành động logout từ API
-    sendJsonMessage(logoutAction); // Gửi yêu cầu logout qua WebSocket
+    const logoutAction = Logout();
+    sendJsonMessage(logoutAction);
     dispatch(logout());
-    // Chuyển hướng về trang đăng nhập
     navigate("/");
   };
-
+// hàm này sẽ xử lý khi click vào 1 item trong list
   const handleItemOnClick = (item) => {
     if (item.type === 0) {
-      dispatch(clearMessage({ name: item.name }));
+      // Không cần xóa tin nhắn cũ ở đây nữa
       const get_people_chat_mess = GET_PEOPLE_CHAT_MES(item.name);
       sender(get_people_chat_mess);
     } else if (item.type === 1) {
-      dispatch(clearGroupMess({ nameGroup: item.nameGroup }));
+      // Không cần xóa tin nhắn của nhóm ở đây nữa
       const get_room_chat_mess = GET_ROOM_CHAT_MES(item.nameGroup);
       sender(get_room_chat_mess);
     }
+    // setChatUser sẽ lưu thông tin của người dùng hoặc nhóm chat hiện tại
     props.setChatUser(item);
   };
 
+
+// hàm này sẽ xử lý khi nhận được tin nhắn từ server
   const handleGetPeopleChatMess = (payload) => {
-    payload.data.forEach((item) => {
+    payload.data.forEach((item) => { // duyệt qua từng tin nhắn
       const { name, to, mes } = item;
       const isSentByUser = name === infor.user.infor.email;
       dispatch(
           saveMessage({
-            name: isSentByUser ? to : name,
-            mess: { text: mes, isSentByUser },
+            name: isSentByUser ? to : name, // nếu là người gửi thì lưu tên người nhận, ngược lại lưu tên người gửi
+            mess: { text: mes, sender: name, isSentByUser },
           })
       );
     });
   };
+
   const handleGetRoomChatMess = (payload) => {
     payload.data.chatData.forEach((item) => {
       const { name, mes } = item;
@@ -62,11 +65,12 @@ const List = (props) => {
       dispatch(
           saveGroupMess({
             nameGroup: respone.data.name,
-            messGroup: { text: mes, isSentByUser },
+            messGroup: { text: mes, sender: name, isSentByUser },
           })
       );
     });
   };
+
   const handleSendChat = (payload) => {
     console.log(payload);
     const check = friends.every((item) => item.name !== payload.data.name);
@@ -76,6 +80,7 @@ const List = (props) => {
       sender(SEND_CHAT(payload.data.name, ""));
     }
   };
+
   useEffect(() => {
     if (respone && respone.status === "success") {
       switch (respone.event) {
@@ -98,12 +103,14 @@ const List = (props) => {
     setName((pre) => "");
     sender(send_chat);
   };
+
   const joingroup = () => {
     let value = name;
     const join_room = JOIN_ROOM(value);
     setName((pre) => "");
     sender(join_room);
   };
+
   const creategroup = () => {
     let value = name;
     const create_room = CREATE_ROOM(value);
@@ -116,10 +123,7 @@ const List = (props) => {
         <div className="list_header">
           <div className="img">
             <Link to="/info">
-              <img
-                  src="https://www.w3schools.com/howto/img_avatar.png"
-                  alt="avatar"
-              />
+              <img src="https://www.w3schools.com/howto/img_avatar.png" alt="avatar" />
             </Link>
             <div className="name">
               <span>{userInfo.name}</span>
@@ -156,10 +160,11 @@ const List = (props) => {
         </div>
         <div className="chatList">
           {all &&
-              all.map((item) => {
+              all.map((item, index) => {
+                const uniqueKey = item.type === 0 ? `friend-${item.name}` : `group-${item.nameGroup}`;
                 return item.type === 0 ? (
                     <Friend
-                        key={item.name}
+                        key={uniqueKey}
                         img={item.img}
                         name={item.nameGroup || item.name}
                         time={item.time}
@@ -169,7 +174,7 @@ const List = (props) => {
                     />
                 ) : (
                     <ShowGroup
-                        key={item.nameGroup}
+                        key={uniqueKey}
                         nameGroup={item.nameGroup}
                         onClick={() => handleItemOnClick(item)}
                     />
