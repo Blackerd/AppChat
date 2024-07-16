@@ -7,10 +7,10 @@ const Friend = ({ img, name, time, message, unread, onClick }) => {
         <div className="friendItem">
           <div className="item">
             <div className="img">
-              <img src={img} alt="avatar" />
+              <img src="img/p1.jpg" alt="avatar"/>
             </div>
             <div className="name">
-              <div className="info">
+            <div className="info">
                 <span>{name}</span>
                 <span>{time}</span>
               </div>

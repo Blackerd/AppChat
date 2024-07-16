@@ -19,7 +19,7 @@ const userSlice = createSlice({
       const { name, type, actionTime, avatarUrl } = action.payload.item;
       const newFriend = {
         name,
-        listmessage: [], // Initialize with an empty array for messages
+        listmessage: [], // lưu tin nhắn của người dùng
         type,
         actionTime,
         avatarUrl,
