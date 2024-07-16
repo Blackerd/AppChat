@@ -5,7 +5,6 @@ import Chat from "./chat/chat";
 import { useDispatch, useSelector } from "react-redux";
 import { WebsocketContext } from "../../socket/WebsocketContent";
 import { logout, setFriends, setGroups } from "../../store/userSlice";
-import { RE_LOGIN, GET_PEOPLE_CHAT_MES } from "../../api/action";
 import GroupComponent from "../../components/group/GroupComponent";
 import { useNavigate } from "react-router-dom";
 

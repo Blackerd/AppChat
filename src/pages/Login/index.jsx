@@ -77,7 +77,7 @@ function LogIn() {
         <div className={cx("brand-logo")}></div>
         <div className={cx("brand-title")}>TWITTER</div>
         <form className={cx("inputs")}>
-          <label htmlFor="account">Account</label>
+          <label htmlFor="account">Tên đăng nhập</label>
           <InputComponent
             name="account"
             inputValue={form.email}
@@ -90,7 +90,7 @@ function LogIn() {
             }
             ref={inputEmail}
           />
-          <label htmlFor="password">Password </label>
+          <label htmlFor="password">Mật khẩu </label>
           <InputComponent
             name="password"
             inputValue={form.password}

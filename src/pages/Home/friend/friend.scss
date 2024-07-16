@@ -1,4 +1,7 @@
 .friend {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid #fff;
   .friendItem {
     display: flex;
     flex-direction: column;
@@ -7,8 +10,6 @@
       display: flex;
       align-items: center;
       padding: 10px;
-      margin: 10px;
-      background: #c0d6e8;
       border-radius: 10px;
       width: 100%; // Thay đổi từ 250px thành 100% để tự động điều chỉnh theo chiều rộng cha
 
@@ -39,9 +40,9 @@
           margin-bottom: 5px;
 
           span {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
-            color: #333;
+            color: #fff;
             max-width: 150px;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -55,7 +56,7 @@
 
           span {
             font-size: 12px;
-            color: #666;
+            color: #fff;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -74,7 +75,6 @@
       }
 
       &:hover {
-        background: #03aed2;
         cursor: pointer;
 
         .name {

@@ -20,25 +20,28 @@
 }
 
 .sentMessage {
-  background-color: #294B29;
+  background-color: #8E3E63;
   color: #f1f1f1;
   align-self: flex-end;
   border-top-right-radius: 0;
+  font-size: 13px;
 }
 
 .receivedMessage {
-  background-color: #597445;
+  background-color: #7469B6;
   color: #f1f1f1;
   align-self: flex-start;
   border-top-left-radius: 0;
+  font-size: 13px;
 }
 
 .messageText {
   margin: 0;
+  align-items: center;
 }
 
 .messageSender {
-  font-size: 12px;
+  font-size: 13px;
   color: #888;
   margin-top: 4px;
 }
