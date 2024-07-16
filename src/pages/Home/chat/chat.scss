@@ -107,17 +107,19 @@
 
   .input {
     flex: 1;
-    padding: 8px;
+    padding: 10px;
     border-radius: 5px;
     border: none;
     background: #fff;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+
   }
 
   .sendItem {
     display: flex;
     gap: 10px;
     font-size: 16px;
+    align-items: center;
 
     .icon {
       cursor: pointer;
@@ -131,12 +133,11 @@
       display: flex;
       align-items: center;
       gap: 5px;
-      padding: 8px;
+      padding: 10px 20px 10px 20px;
       background: #06D001;
       border-radius: 5px;
       color: #ecf0f3;
       cursor: pointer;
-
       span {
         font-weight: bold;
       }

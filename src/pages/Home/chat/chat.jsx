@@ -81,6 +81,13 @@ const Chat = (props, ref) => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Ngăn chặn hành động mặc định của Enter (thường là submit form)
+      handleSendMessages(); // Gọi hàm gửi tin nhắn
+    }
+  };
+
   const inputRef = useRef();
   useImperativeHandle(ref, () => ({
     clearInput() {
@@ -119,6 +126,7 @@ const Chat = (props, ref) => {
               placeholder="Nhập tin nhắn..."
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
+              onKeyDown={handleKeyDown} // Bắt sự kiện Enter
               ref={inputRef}
           />
           <div className="sendItem">
@@ -126,7 +134,6 @@ const Chat = (props, ref) => {
             <FontAwesomeIcon className="icon" icon={faPaperclip} />
             <div className="send" onClick={handleSendMessages}>
               <span>Gửi</span>
-              <FontAwesomeIcon className="icon" icon={faPaperPlane} />
             </div>
           </div>
         </div>

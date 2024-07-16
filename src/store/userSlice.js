@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    infor: { name: "", email: "", friends: [], groups: [] },
+    infor: { name: "", email: "", friends: [], groups: [], messages: []},
     status: "",
   },
   reducers: {
@@ -16,44 +16,40 @@ const userSlice = createSlice({
       state.status = "Auth";
     },
     setFriends: (state, action) => {
-      const { name, type, actionTime } = action.payload.item;
+      const { name, type, actionTime, avatarUrl } = action.payload.item;
       const newFriend = {
         name,
         listmessage: [], // Initialize with an empty array for messages
         type,
         actionTime,
+        avatarUrl,
       };
       state.infor.friends.push(newFriend);
       state.status = "Auth";
     },
+    // lưu tin nhắn vào danh sách tin nhắn của người dùng
     saveMessage: (state, action) => {
+      // Lấy tên người dùng và tin nhắn từ action
       const { name, mess } = action.payload;
+      // Tìm vị trí của người dùng trong danh sách bạn bè
       const friendIndex = state.infor.friends.findIndex((f) => f.name === name);
+
+      // Nếu người dùng tồn tại trong danh sách bạn bè
       if (friendIndex !== -1) {
-        const friend = state.infor.friends[friendIndex];
-        if (Array.isArray(mess)) {
-          mess.forEach(message => {
-            if (message && message.text && message.sender) { // Kiểm tra message tồn tại và có đủ thuộc tính
-              friend.listmessage.push({
-                text: message.text,
-                sender: message.sender,
-              });
-            }
-          });
-        } else {
-          if (mess && mess.text && mess.sender) { // Kiểm tra mess tồn tại và có đủ thuộc tính
-            friend.listmessage.push({
-              text: mess.text,
-              sender: mess.sender,
-            });
-          }
+        const friend = state.infor.friends[friendIndex]; // Lấy thông tin người dùng
+        if (mess && mess.text && mess.sender) { // Kiểm tra xem tin nhắn có dữ liệu không
+          const isCurrentUser = mess.sender === state.infor.email; // Kiểm tra xem người gửi có phải là người đăng nhập không
+          const message = {
+            text: mess.text,
+            sender: mess.sender,
+            type: isCurrentUser ? "currentUser" : "otherUser",
+            time: new Date().toISOString(),
+          };
+          friend.listmessage.push(message); // Thêm tin nhắn vào danh sách tin nhắn của người dùng
         }
-        state.infor.friends[friendIndex] = { ...friend };
+        state.infor.friends[friendIndex] = { ...friend }; // Cập nhật thông tin người dùng
       }
     },
-
-
-
 
     clearMessage: (state, action) => {
       const { name } = action.payload;
@@ -77,7 +73,14 @@ const userSlice = createSlice({
       const { nameGroup, messGroup } = action.payload;
       const group = state.infor.groups.find((g) => g.nameGroup === nameGroup);
       if (group) {
-        group.listmessage.push(...messGroup); // Append new messages to group's message list
+        messGroup.forEach(message => {
+          const isCurrentUser = message.sender === state.infor.name;
+          group.listmessage.push({
+            text: message.text,
+            sender: message.sender,
+            type: isCurrentUser ? "currentUser" : "otherUser",
+          });
+        });
       }
     },
     clearGroupMess: (state, action) => {
