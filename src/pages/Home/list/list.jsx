@@ -34,13 +34,13 @@ const List = (props) => {
       const getPeopleChatMess = GET_PEOPLE_CHAT_MES(item.name); // lấy tin nhắn giữa 2 người
       sender(getPeopleChatMess); // gửi yêu cầu lấy tin nhắn giữa 2 người
       console.log(getPeopleChatMess)
-    } else if (item.type === 1) {
+    } else if (item.type === 1) { // nếu là nhóm
       const getRoomChatMess = GET_ROOM_CHAT_MES(item.nameGroup);
-      sender(getRoomChatMess);
+      sender(getRoomChatMess);// gửi yêu cầu lấy tin nhắn trong nhóm
+      console.log(getRoomChatMess)
     }
     props.setChatUser(item);
   };
-
 
 // hàm này sẽ xử lý khi nhận được tin nhắn từ server thông qua hàm sender
   const handleGetPeopleChatMess = (payload) => {
@@ -60,10 +60,10 @@ const List = (props) => {
   const handleGetRoomChatMess = (payload) => {
     payload.data.chatData.forEach((item) => {
       const { name, mes } = item;
-      const isSentByUser = name === infor.user.infor.email;
+      const isSentByUser = name === userInfo.email;
       dispatch(
           saveGroupMess({
-            nameGroup: respone.data.name,
+            nameGroup: payload.data.name,
             messGroup: { text: mes, sender: name, isSentByUser },
           })
       );
@@ -130,10 +130,8 @@ const List = (props) => {
         const isSentByUser = lastMessage.sender === userInfo.name;
         // Tạo chuỗi tin nhắn dựa trên người gửi và người nhận
         latestMessage = `${isSentByUser ? "Bạn" : lastMessage.sender}: ${lastMessage.text }`;
-
       }
     }
-
     // Tìm kiếm nhóm có tên là 'name'
     const group = groups.find((g) => g.nameGroup === name);
     if (group) {
@@ -194,7 +192,6 @@ const List = (props) => {
               &&
               all
                   .filter((item) => item.type !== 0 || item.name !== userInfo.name) // Lọc ra những người không phải là người dùng hiện tại
-                  .filter((item) => item.type !== 1)
                   .map((item, index) => {
                     const uniqueKey = item.type === 0 ? `friend-${item.name}` : `group-${item.nameGroup}`;
                     return item.type === 0 ? (
@@ -211,6 +208,7 @@ const List = (props) => {
                     <ShowGroup
                         key={uniqueKey}
                         nameGroup={item.nameGroup}
+                        messGroup={getLatestMessage(item.nameGroup)}
                         onClick={() => handleItemOnClick(item)}
                     />
                 );
