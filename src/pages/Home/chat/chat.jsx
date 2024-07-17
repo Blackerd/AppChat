@@ -13,7 +13,7 @@ const Chat = (props, ref) => {
   const [isReady, respone, sender] = useContext(WebsocketContext);
   const dispatch = useDispatch();
   const { name: loggedInUserName } = useSelector((state) => state.reducer.user.infor); // Lấy email người đang đăng nhập
-  const { friends } = useSelector((state) => state.reducer.user.infor);
+  const { friends , groups} = useSelector((state) => state.reducer.user.infor);
   const [currentFriend, setCurrentFriend] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const [selectedEmoji, setSelectedEmoji] = useState("");
@@ -23,11 +23,20 @@ const Chat = (props, ref) => {
   const [image, setImage] = useState({
     file:null, url: ""
   });
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
-    const friend = friends.find((item) => item.name === props.friend.name);
-    setCurrentFriend(friend);
-  }, [props.friend, friends]);
+    // const friend = friends.find((item) => item.name === props.friend.name);
+    // setCurrentFriend(friend);
+    // Xác định xem selectedUser là người dùng (friend) hay nhóm (group)
+    if (selectedUser && selectedUser.type === 0) {
+      const friend = friends.find((item) => item.name === selectedUser.name);
+      setCurrentFriend(friend);
+    } else if (selectedUser && selectedUser.type === 1) {
+        const group = groups.find((item) => item.nameGroup === selectedUser.name);
+        setCurrentFriend(group);
+    }
+  }, [selectedUser, friends, groups]);
 
   const handleGetPeopleChatMess = (payload) => {
     console.log("Raw Data from Server:", payload.data);
@@ -270,10 +279,11 @@ const Chat = (props, ref) => {
               </div>
               <div className="name">
                 <div className="info">
-                  <span>{props.friend.name.split("@")[0]}</span>
+                  {/*<span>{props.friend.name.split("@")[0]}</span> // Hiển thị tên người bạn chat*/}
+                  <span>{selectedUser.name.split("@")[0]}</span>
                 </div>
                 <div className="icons">
-                  <FontAwesomeIcon className="icon" icon={faPhone}/>
+                <FontAwesomeIcon className="icon" icon={faPhone}/>
                   <FontAwesomeIcon className="icon" icon={faVideo}/>
                   <FontAwesomeIcon className="icon" icon={faBars}/>
                 </div>
