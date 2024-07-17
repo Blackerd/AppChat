@@ -1,7 +1,7 @@
 .friend {
   margin: 0;
   padding: 0;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid #000000;
 }
 .friend .friendItem {
   display: flex;
@@ -41,7 +41,7 @@
 .friend .friendItem .item .name .info span {
   font-size: 12px;
   font-weight: bold;
-  color: #fff;
+  color: #000000;
   max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -53,7 +53,7 @@
 }
 .friend .friendItem .item .name .text span {
   font-size: 12px;
-  color: #fff;
+  color: #000000;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -61,7 +61,7 @@
 }
 .friend .friendItem .item .name .text .unread {
   background-color: #ff6347;
-  color: white;
+  color: #000000;
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 10px;
@@ -71,7 +71,7 @@
   cursor: pointer;
 }
 .friend .friendItem .item:hover .name .info span {
-  color: #fff;
+  color: #000000;
 }
 
 /*# sourceMappingURL=friend.css.map */

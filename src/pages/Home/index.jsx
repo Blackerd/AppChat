@@ -60,14 +60,14 @@ function Home() {
 
   const inputFillGroup = useRef();
 
-  const handleDeleteFillInput = () => { // hàm này sẽ xóa tin nhắn trong ô input
+  const handleDeleteFillInput = () => {
     if (inputFillGroup.current) {
       inputFillGroup.current.clearInput();
     }
   };
 
-  const handleSetSelectedUser = (user) => { // hàm này sẽ xử lý khi click vào 1 người bạn hoặc 1 nhóm
-    setSelectedUser(user); // set người bạn hoặc nhóm được chọn
+  const handleSetSelectedUser = (user) => {
+    setSelectedUser(user);
   };
 
   return (
@@ -84,8 +84,7 @@ function Home() {
                     selectedUser.type === 0 ? (
                         <Chat friend={selectedUser} ref={inputFillGroup} />
                     ) : (
-                        // <GroupComponent group={selectedUser} ref={inputFillGroup} />
-                        <Chat group={selectedUser} ref={inputFillGroup} />
+                        <GroupComponent group={selectedUser} ref={inputFillGroup} />
                     )
                 ) : (
                     <div className="empty-chat">

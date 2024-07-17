@@ -216,15 +216,17 @@ const List = (props) => {
               &&
               all
                   .filter((item) => item.type !== 0 || item.name !== userInfo.name) // Lọc ra những người không phải là người dùng hiện tại
+                  // không hiển thị cùng 1 người mà lặp lại nhiều lần
+                  .filter((item, index, self) => self.findIndex((t) => t.name === item.name) === index)
                   .map((item, index) => {
                     const uniqueKey = item.type === 0 ? `friend-${item.name}` : `group-${item.nameGroup}`;
                     return item.type === 0 ? ( // Nếu là người bạn
                         <Friend
                         key={uniqueKey}
                         img={item.img}
-                        name={item.nameGroup || item.name}
+                        name={item.name}
                         time={item.time}
-                        message={getLatestMessage(item.name) || getLatestMessage(item.nameGroup)}
+                        message={getLatestMessage(item.name)}
                         unread={item.unread}
                         onClick={() => handleItemOnClick(item)}
                     />
