@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import "./message.css";
 
-const Message = ({ text, sender, isSentByUser, img }) => {
+const Message = ({ text, sender, isSentByUser, img ,createdAt }) => {
     const messageRef = useRef(null);
 
     useEffect(() => {
@@ -13,6 +13,10 @@ const Message = ({ text, sender, isSentByUser, img }) => {
 
     // Kiểm tra nếu tin nhắn là ảnh (bắt đầu bằng "data:image/")
     const isImageMessage = text.startsWith("data:image/");
+
+    // Xác định nội dung tin nhắn dựa trên người gửi
+    const messageContent = isSentByUser ? `Bạn: ${text}` : `${sender}: ${text}`;
+
 
     return (
         <div ref={messageRef} className={`messageContainer ${isSentByUser ? "sent" : "received"}`}>

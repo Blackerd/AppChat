@@ -3,7 +3,7 @@ import "./chat.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faFaceSmile, faPaperclip, faPaperPlane, faPhone, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { WebsocketContext } from "../../../socket/WebsocketContent";
-import { SEND_CHAT, GET_PEOPLE_CHAT_MES } from "../../../api/action";
+import { SEND_CHAT, GET_PEOPLE_CHAT_MES , SEND_CHAT_TO_ROOM, GET_ROOM_CHAT_MES} from "../../../api/action";
 import { useDispatch, useSelector } from "react-redux";
 import { saveMessage , saveImageURL} from "../../../store/userSlice";
 import Message from "../message/message";
@@ -57,7 +57,42 @@ const Chat = (props, ref) => {
     setMessages(filteredMessages);
   };
 
+  // Xử lý khi nhận tin nhắn từ room chat
+  const handleGetRoomChatMess = (payload) => {
+    console.log("Raw Data from Server:", payload.data);
+    const listmess = payload.data.reverse().map((item) => ({
+      text: item.mes,
+      sender: item.name,
+    }));
 
+    // Debugging to check message sender
+    console.log("Messages from Server:", listmess);
+
+    // Lưu tin nhắn vào danh sách tin nhắn của room
+    const filteredMessages = listmess.map((item) => ({
+      text: item.text,
+      // Không cần xác định người gửi trong room chat
+    }));
+    // Cập nhật tin nhắn hiển thị trên giao diện
+    setMessages(filteredMessages);
+  };
+
+  // Xử lý khi gửi tin nhắn từ room chat
+  const handleSendRoomChatResponse = (payload) => {
+    const isSentByUser = payload.data.name === loggedInUserName; // Kiểm tra xem tin nhắn có phải của người gửi không
+    console.log(`New Message: ${payload.data.mes}, Sender: ${payload.data.name}, isSentByUser: ${isSentByUser}`);
+    const newChat = [
+      ...messages,
+      {
+        text: payload.data.mes,
+        isSentByUser: payload.data.name === loggedInUserName, // Kiểm tra xem tin nhắn có phải của người gửi không
+      },
+    ];
+    setMessages(newChat);
+    setNewMessage("");
+  };
+
+  // Xử lý khi nhận tin nhắn từ server thông qua hàm sender
   const handleSendChatResponse = (payload) => {
     const isSentByUser = payload.data.name === loggedInUserName; // Kiểm tra xem tin nhắn có phải của người gửi không
     console.log(`New Message: ${payload.data.mes}, Sender: ${payload.data.name}, isSentByUser: ${isSentByUser}`);
@@ -81,12 +116,19 @@ const Chat = (props, ref) => {
         case "GET_PEOPLE_CHAT_MES":
           handleGetPeopleChatMess(respone);
           break;
+        case "SEND_CHAT_TO_ROOM":
+            handleSendRoomChatResponse(respone);
+            break;
+        case "GET_ROOM_CHAT_MES":
+            handleGetRoomChatMess(respone);
+            break;
         default:
           break;
       }
     }
   }, [respone]);
 
+  // Hàm xử lý khi gửi tin nhắn cho người dùng
   const handleSendMessages = async () => {
     if (newMessage.trim() || selectedEmoji !== "" || selectedFile) { // Kiểm tra xem tin nhắn hoặc emoji có dữ liệu không
       let messageToSend = newMessage.trim(); // Xóa khoảng trắng ở đầu và cuối chuỗi
