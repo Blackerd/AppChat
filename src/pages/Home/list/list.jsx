@@ -124,6 +124,7 @@ const List = (props) => {
     const friend = friends.find((f) => f.name === name);
     if (friend) {
       const lastMessage = friend.listmessage[friend.listmessage.length - 1];
+      console.log("lasst " + lastMessage);
       if (lastMessage) {
         // Kiểm tra xem tin nhắn được gửi bởi người dùng hiện tại hay không
         const isSentByUser = lastMessage.sender === userInfo.name;
