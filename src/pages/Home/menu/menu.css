@@ -1,5 +1,5 @@
 aside {
-  background: #5755fe;
+  background: #5755FE;
   margin: 10px;
   border-radius: 10px;
 }
@@ -25,9 +25,9 @@ aside .menu .menuItem {
   margin: 0;
   padding: 0;
   flex-direction: column;
+  width: 100%;
 }
-aside .menu .menuItem .item,
-aside .menu .menuItem .logOut {
+aside .menu .menuItem .item, aside .menu .menuItem .logOut {
   display: flex;
   padding: 5px;
   margin: 5px;
@@ -35,31 +35,25 @@ aside .menu .menuItem .logOut {
   background: #ffffff;
   cursor: pointer;
 }
-aside .menu .menuItem .item .icon,
-aside .menu .menuItem .logOut .icon {
+aside .menu .menuItem .item .icon, aside .menu .menuItem .logOut .icon {
   padding: 5px;
   border-radius: 50%;
-  color: #5755fe;
+  color: #5755FE;
 }
-aside .menu .menuItem .item span,
-aside .menu .menuItem .logOut span {
-  overflow: hidden;
+aside .menu .menuItem .item span, aside .menu .menuItem .logOut span {
   margin: 4px 6px 4px 6px;
-  color: #5755fe;
+  color: #5755FE;
 }
 aside .menu .menuItem .logOut {
   margin-top: 300px;
 }
-aside .menu .menuItem .item:hover,
-aside .menu .menuItem .logOut:hover {
-  background: #03aed2;
+aside .menu .menuItem .item:hover, aside .menu .menuItem .logOut:hover {
+  background: #03AED2;
 }
-aside .menu .menuItem .item:hover .icon,
-aside .menu .menuItem .logOut:hover .icon {
+aside .menu .menuItem .item:hover .icon, aside .menu .menuItem .logOut:hover .icon {
   color: #ffffff;
 }
-aside .menu .menuItem .item:hover span,
-aside .menu .menuItem .logOut:hover span {
+aside .menu .menuItem .item:hover span, aside .menu .menuItem .logOut:hover span {
   color: #ffffff;
 }
 
