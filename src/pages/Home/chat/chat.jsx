@@ -7,7 +7,6 @@ import { SEND_CHAT, GET_PEOPLE_CHAT_MES } from "../../../api/action";
 import { useDispatch, useSelector } from "react-redux";
 import { saveMessage } from "../../../store/userSlice";
 import Message from "../message/message";
-import IconsPicker from "react-icons-picker";
 import EmojiPicker from "emoji-picker-react";
 
 const Chat = (props, ref) => {
@@ -17,6 +16,7 @@ const Chat = (props, ref) => {
   const { friends } = useSelector((state) => state.reducer.user.infor);
   const [currentFriend, setCurrentFriend] = useState(null);
   const [newMessage, setNewMessage] = useState("");
+  const [selectedEmoji, setSelectedEmoji] = useState("");
   const [messages, setMessages] = useState([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false); // State để quản lý hiển thị bảng chọn emoji
 
@@ -26,6 +26,7 @@ const Chat = (props, ref) => {
   }, [props.friend, friends]);
 
   const handleGetPeopleChatMess = (payload) => {
+    console.log("Raw Data from Server:", payload.data);
     const listmess = payload.data.reverse().map((item) => ({
       text: item.mes,
       sender: item.name,
@@ -83,16 +84,35 @@ const Chat = (props, ref) => {
   }, [respone]);
 
   const handleSendMessages = () => {
-    if (newMessage.trim()) {
-      sender(SEND_CHAT(props.friend.name, newMessage));
+    if (newMessage.trim() || selectedEmoji !== "") { // Kiểm tra xem tin nhắn hoặc emoji có dữ liệu không
+      let messageToSend = newMessage.trim(); // Xóa khoảng trắng ở đầu và cuối chuỗi
+
+      // Nếu có emoji được chọn thì kết hợp vào tin nhắn
+      if (selectedEmoji !== "") {
+        messageToSend += selectedEmoji;
+        console.log("Message with Emoji:", messageToSend);
+      }
+
+      sender(SEND_CHAT(props.friend.name, messageToSend));
       const newChat = [
         ...messages,
-        { text: newMessage, isSentByUser: true },
+        { text: messageToSend, isSentByUser: true },
       ];
       setMessages(newChat);
       setNewMessage(""); // Xóa nội dung tin nhắn sau khi gửi
+
+      // Lưu tin nhắn và emoji vào Redux
+      console.log("Message withhh Emoji:", messageToSend);
+      dispatch(saveMessage({
+        name: currentFriend.name,
+        mess: {
+          text: messageToSend,
+          sender: loggedInUserName,
+        },
+      }));
     }
   };
+
 
 
 
@@ -110,17 +130,21 @@ const Chat = (props, ref) => {
     },
   }));
 
-  const handleEmojiSelect = (event, emojiObject) => {
-    const { emoji } = emojiObject;
-    sender(SEND_CHAT(props.friend.name, emoji)); // Gửi emoji đến server
-    setShowEmojiPicker(false); // Đóng bảng chọn emoji sau khi chọn xong
+  const handleEmoji = e => {
+    if (newMessage.trim() === "") {
+      sender(SEND_CHAT(props.friend.name, e.emoji));
+      const newChat = [
+        ...messages,
+        { text: e.emoji, isSentByUser: true },
+      ];
+      setMessages(newChat);
+    } else {
+      setNewMessage((prev) => prev + e.emoji);
+    }
+    setSelectedEmoji(e.emoji);
+    console.log("Selected Emoji:", e.emoji);
+    setShowEmojiPicker(false);
   };
-
-  const handleEmojiPickerToggle = () => {
-    setShowEmojiPicker(!showEmojiPicker); // Đảo ngược trạng thái hiển thị của bảng chọn emoji
-  };
-
-
   return (
       <div className="chatContainer">
         <div className="header">
@@ -146,6 +170,11 @@ const Chat = (props, ref) => {
               <Message key={index} text={message.text} isSentByUser={message.isSentByUser} />
           ))}
         </div>
+        {showEmojiPicker && (
+            <div className="emojiPicker">
+              <EmojiPicker onEmojiClick={handleEmoji} />
+            </div>
+        )}
         <div className="footer">
           <input
               className="input"
@@ -157,15 +186,13 @@ const Chat = (props, ref) => {
               ref={inputRef}
           />
           <div className="sendItem">
-            <FontAwesomeIcon className="icon" icon={faFaceSmile} onClick={handleEmojiPickerToggle} />
+            <FontAwesomeIcon className="icon" icon={faFaceSmile} onClick={() => setShowEmojiPicker((prev) => !prev)} />
             <FontAwesomeIcon className="icon" icon={faPaperclip} />
             <div className="send" onClick={handleSendMessages}>
               <span>Gửi</span>
             </div>
           </div>
-          {showEmojiPicker && (
-              <EmojiPicker onEmojiClick={handleEmojiSelect} />
-          )}
+
         </div>
       </div>
   );
