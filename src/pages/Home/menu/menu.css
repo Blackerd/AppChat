@@ -1,0 +1,60 @@
+aside {
+  background: #5755FE;
+  margin: 10px;
+  border-radius: 10px;
+}
+aside .menu {
+  margin: 5px;
+  padding: 10px;
+}
+aside .menu .img {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  left: 40px;
+}
+aside .menu .img img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+aside .menu .menuItem {
+  display: flex;
+  border-radius: 10px;
+  margin: 0;
+  padding: 0;
+  flex-direction: column;
+  width: 100%;
+}
+aside .menu .menuItem .item, aside .menu .menuItem .logOut {
+  display: flex;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 10px;
+  background: #ffffff;
+  cursor: pointer;
+}
+aside .menu .menuItem .item .icon, aside .menu .menuItem .logOut .icon {
+  padding: 5px;
+  border-radius: 50%;
+  color: #5755FE;
+}
+aside .menu .menuItem .item span, aside .menu .menuItem .logOut span {
+  margin: 4px 6px 4px 6px;
+  color: #5755FE;
+}
+aside .menu .menuItem .logOut {
+  margin-top: 300px;
+}
+aside .menu .menuItem .item:hover, aside .menu .menuItem .logOut:hover {
+  background: #03AED2;
+}
+aside .menu .menuItem .item:hover .icon, aside .menu .menuItem .logOut:hover .icon {
+  color: #ffffff;
+}
+aside .menu .menuItem .item:hover span, aside .menu .menuItem .logOut:hover span {
+  color: #ffffff;
+}
+
+/*# sourceMappingURL=menu.css.map */
