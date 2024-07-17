@@ -73,5 +73,56 @@
 .friend .friendItem .item:hover .name .info span {
   color: #000000;
 }
+@media (max-width: 768px) {
+  .friend .friendItem .item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .friend .friendItem .item .img {
+    width: 35px;
+    height: 35px;
+  }
+  .friend .friendItem .item .name {
+    margin-left: 0;
+    margin-top: 5px;
+  }
+  .friend .friendItem .item .name .info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .friend .friendItem .item .name .info span {
+    max-width: 100%;
+  }
+  .friend .friendItem .item .name .text {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .friend .friendItem .item .name .text span {
+    max-width: 100%;
+  }
+  .friend .friendItem .item .name .text .unread {
+    margin-left: 0;
+    margin-top: 5px;
+  }
+}
+@media (max-width: 480px) {
+  .friend .friendItem .item {
+    padding: 8px;
+  }
+  .friend .friendItem .item .img {
+    width: 30px;
+    height: 30px;
+  }
+  .friend .friendItem .item .name .info span {
+    font-size: 10px;
+  }
+  .friend .friendItem .item .name .text span {
+    font-size: 10px;
+  }
+  .friend .friendItem .item .name .text .unread {
+    font-size: 8px;
+    padding: 1px 6px;
+  }
+}
 
 /*# sourceMappingURL=friend.css.map */
