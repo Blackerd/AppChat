@@ -37,19 +37,16 @@ const userSlice = createSlice({
       // Nếu người dùng tồn tại trong danh sách bạn bè
       if (friendIndex !== -1) {
         const friend = state.infor.friends[friendIndex]; // Lấy thông tin người dùng
-
-        if (mess && Array.isArray(mess)) {
-          mess.forEach(message => {
-            const isCurrentUser = message.sender === state.infor.email;
-            const formattedMessage = {
-              text: message.text,
-              sender: message.sender,
-              type: isCurrentUser ? "currentUser" : "otherUser",
-              time: new Date().toISOString(),
-            };
-            console.log("Storing Message:", formattedMessage);
-            friend.listmessage.push(formattedMessage);
-          });
+        if (mess && mess.text && mess.sender) { // Kiểm tra xem tin nhắn có dữ liệu không
+          const isCurrentUser = mess.sender === state.infor.email; // Kiểm tra xem người gửi có phải là người đăng nhập không
+          const message = {
+            text: mess.text,
+            sender: mess.sender,
+            type: isCurrentUser ? "currentUser" : "otherUser",
+            time: new Date().toISOString(),
+          };
+          console.log("Message:", message);
+          friend.listmessage.push(message); // Thêm tin nhắn vào danh sách tin nhắn của người dùng
         }
         state.infor.friends[friendIndex] = { ...friend }; // Cập nhật thông tin người dùng
       }
@@ -77,7 +74,7 @@ const userSlice = createSlice({
       const { nameGroup, messGroup } = action.payload;
       const group = state.infor.groups.find((g) => g.nameGroup === nameGroup);
       if (group) {
-        messGroup.forEach(message => {
+        messGroup.forEach((message) => {
           const isCurrentUser = message.sender === state.infor.name;
           group.listmessage.push({
             text: message.text,
@@ -98,6 +95,21 @@ const userSlice = createSlice({
       state.infor = { name: "", email: "", friends: [], groups: [] };
       state.status = "UnAuth";
     },
+    saveImageURL: (state, action) => {
+      const { name, imageUrl } = action.payload;
+      const friendIndex = state.infor.friends.findIndex((f) => f.name === name);
+      if (friendIndex !== -1) {
+        const friend = state.infor.friends[friendIndex];
+        const imageMessage = {
+          imageUrl: imageUrl, // Lưu URL của ảnh
+          sender: state.infor.name,
+          type: "currentUser",
+          time: new Date().toISOString(),
+        };
+        friend.listmessage.push(imageMessage);
+        state.infor.friends[friendIndex] = { ...friend };
+      }
+    },
   },
 });
 
@@ -110,6 +122,7 @@ export const {
   clearMessage,
   saveGroupMess,
   clearGroupMess,
+  saveImageURL,
   logout,
 } = userSlice.actions;
 
