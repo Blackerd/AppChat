@@ -10,14 +10,14 @@ const Friend = ({ img, name, time, message, unread, onClick }) => {
               <img src="img/p1.jpg" alt="avatar"/>
             </div>
             <div className="name">
-            <div className="info">
-                <span>{name}</span>
-                <span>{time}</span>
-              </div>
-              <div className="text">
-                <span>{message}</span>
-                {unread > 0 && <div className="unread">{unread}</div>}
-              </div>
+                <div className="info">
+                    <span>{name}</span>
+                    <span>{time}</span>
+                </div>
+                <div className="text">
+                    <span>{message}</span>
+                    {unread > 0 && <div className="unread">{unread}</div>}
+                  </div>
             </div>
           </div>
         </div>
