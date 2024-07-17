@@ -1,3 +1,6 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
+
 import {
     BrowserRouter as Router,
     Route,
@@ -9,7 +12,7 @@ import { publicRoutes, privateRoutes } from "./routes";
 function App() {
     return (
         <Router>
-            <div className="App" style={{ width: "100%", height: "100%" }}>
+            <div className="  App " style={{ width: "100%", height: "100%" }}>
                 <Routes>
                     {publicRoutes.map((route, index) => {
                         return (

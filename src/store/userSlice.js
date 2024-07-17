@@ -3,11 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    infor: { name: "", email: "", friends: [], groups: [] },
+    infor: { name: "", email: "", friends: [], groups: [], messages: []},
     status: "",
   },
   reducers: {
-    // các actions
     setName: (state, action) => {
       state.infor.name = action.payload;
       state.status = "Auth";
@@ -17,80 +16,103 @@ const userSlice = createSlice({
       state.status = "Auth";
     },
     setFriends: (state, action) => {
-      const friend = {
-        name: action.payload.item.name,
-        listmessage: [],
-        type: action.payload.item.type,
-        actionTime: action.payload.item.actionTime,
+      const { name, type, actionTime, avatarUrl } = action.payload.item;
+      const newFriend = {
+        name,
+        listmessage: [], // lưu tin nhắn của người dùng
+        type,
+        actionTime,
+        avatarUrl,
       };
-      state.infor.friends = [...state.infor.friends, friend];
-
+      state.infor.friends.push(newFriend);
       state.status = "Auth";
     },
+    // lưu tin nhắn vào danh sách tin nhắn của người dùng
     saveMessage: (state, action) => {
+      // Lấy tên người dùng và tin nhắn từ action
       const { name, mess } = action.payload;
+      // Tìm vị trí của người dùng trong danh sách bạn bè
       const friendIndex = state.infor.friends.findIndex((f) => f.name === name);
+
+      // Nếu người dùng tồn tại trong danh sách bạn bè
       if (friendIndex !== -1) {
-        const friend = state.infor.friends[friendIndex];
-        friend.messages = friend.messages ? [...friend.messages, mess] : [mess];
-        state.infor.friends[friendIndex] = { ...friend };
+        const friend = state.infor.friends[friendIndex]; // Lấy thông tin người dùng
+        if (mess && mess.text && mess.sender) { // Kiểm tra xem tin nhắn có dữ liệu không
+          const isCurrentUser = mess.sender === state.infor.email; // Kiểm tra xem người gửi có phải là người đăng nhập không
+          const message = {
+            text: mess.text,
+            sender: mess.sender,
+            type: isCurrentUser ? "currentUser" : "otherUser",
+            time: new Date().toISOString(),
+          };
+          console.log("Message:", message);
+          friend.listmessage.push(message); // Thêm tin nhắn vào danh sách tin nhắn của người dùng
+        }
+        state.infor.friends[friendIndex] = { ...friend }; // Cập nhật thông tin người dùng
       }
     },
 
     clearMessage: (state, action) => {
-      state.infor = {
-        ...state.infor,
-        friends: state.infor.friends.map((f) => {
-          if (f.name === action.payload.name) {
-            return {
-              ...f,
-              listmessage: [],
-            };
-          }
-          return f;
-        }),
-      };
+      const { name } = action.payload;
+      const friend = state.infor.friends.find((f) => f.name === name);
+      if (friend) {
+        friend.listmessage = []; // Clear messages for a specific friend
+      }
     },
     setGroups: (state, action) => {
-      const group = {
-        nameGroup: action.payload.item.name,
+      const { name, type, actionTime } = action.payload.item;
+      const newGroup = {
+        nameGroup: name,
         listmessage: [],
-        type: action.payload.item.type || 1,
-        actionTime: action.payload.item.actionTime || "",
+        type: type || 1,
+        actionTime: actionTime || "",
       };
-      state.infor.groups = [...state.infor.groups, group];
+      state.infor.groups.push(newGroup);
       state.status = "Auth";
     },
     saveGroupMess: (state, action) => {
       const { nameGroup, messGroup } = action.payload;
-      const groupIndex = state.infor.groups.findIndex(
-        (g) => g.nameGroup === nameGroup
-      );
-      if (groupIndex !== -1) {
-        const group = state.infor.groups[groupIndex];
-        group.messages = group.messages
-          ? [...group.messages, messGroup]
-          : [messGroup];
-        state.infor.groups[groupIndex] = { ...group };
+      const group = state.infor.groups.find((g) => g.nameGroup === nameGroup);
+      if (group) {
+        messGroup.forEach((message) => {
+          const isCurrentUser = message.sender === state.infor.name;
+          group.listmessage.push({
+            text: message.text,
+            sender: message.sender,
+            type: isCurrentUser ? "currentUser" : "otherUser",
+          });
+        });
       }
     },
     clearGroupMess: (state, action) => {
-      state.infor = {
-        ...state.infor,
-        groups: state.infor.groups.map((item) => {
-          if (item.nameGroup === action.payload.nameGroup) {
-            return { ...item, listmessage: [] };
-          }
-          return item;
-        }),
-      };
+      const { nameGroup } = action.payload;
+      const group = state.infor.groups.find((g) => g.nameGroup === nameGroup);
+      if (group) {
+        group.listmessage = []; // Clear messages for a specific group
+      }
     },
     logout: (state, action) => {
       state.infor = { name: "", email: "", friends: [], groups: [] };
       state.status = "UnAuth";
     },
+    saveImageURL: (state, action) => {
+      const { name, imageUrl } = action.payload;
+      const friendIndex = state.infor.friends.findIndex((f) => f.name === name);
+      if (friendIndex !== -1) {
+        const friend = state.infor.friends[friendIndex];
+        const imageMessage = {
+          imageUrl: imageUrl, // Lưu URL của ảnh
+          sender: state.infor.name,
+          type: "currentUser",
+          time: new Date().toISOString(),
+        };
+        friend.listmessage.push(imageMessage);
+        state.infor.friends[friendIndex] = { ...friend };
+      }
+    },
   },
 });
+
 export const {
   setName,
   setEmail,
@@ -100,6 +122,8 @@ export const {
   clearMessage,
   saveGroupMess,
   clearGroupMess,
+  saveImageURL,
   logout,
-} = userSlice.actions; // log các action từ userSlice
+} = userSlice.actions;
+
 export default userSlice.reducer;

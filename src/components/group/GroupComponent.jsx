@@ -107,34 +107,54 @@ function GroupComponent(props, ref) {
     // event:"SEND_CHAT"
     // status:"success"
   };
+  // const handleGetRoomChatMess = (payload) => {
+  //   // createAt: "2024-06-16 09:14:18";
+  //   // id: 31810;
+  //   // mes: "asdasdasdasd";
+  //   // name: "doxuanhau@gmail.com";
+  //   // to: "hauvanhungnguoiban@gmail.com";
+  //   // type: 1;
+  //   payload.data.chatData.reverse().map((item) => {
+  //     // let name = item.name; //sender
+  //     // let to = item.to; // retriver
+  //     // let text = item.mes;
+  //     // let a = name === infor.user.infor.email;
+  //     dispatch(
+  //       saveGroupMess({
+  //         nameGroup: item.to,
+  //         messGroup: {
+  //           text: item.mes,
+  //           isSentByUser: item.name === infor.user.infor.email,
+  //         },
+  //       })
+  //     );
+  //     // const newChat = [...messages, { text: text, isSentByUser: a }];
+  //     setMessages((pre) => [
+  //       ...pre,
+  //       { text: item.mes, isSentByUser: item.name === infor.user.infor.email },
+  //     ]);
+  //   });
+  // };
+
   const handleGetRoomChatMess = (payload) => {
-    // createAt: "2024-06-16 09:14:18";
-    // id: 31810;
-    // mes: "asdasdasdasd";
-    // name: "doxuanhau@gmail.com";
-    // to: "hauvanhungnguoiban@gmail.com";
-    // type: 1;
-    payload.data.chatData.reverse().map((item) => {
-      // let name = item.name; //sender
-      // let to = item.to; // retriver
-      // let text = item.mes;
-      // let a = name === infor.user.infor.email;
+    payload.data.chatData.reverse().forEach(item => { // lấy ra từng tin nhắn trong mảng chatData
       dispatch(
-        saveGroupMess({
-          nameGroup: item.to,
-          messGroup: {
-            text: item.mes,
-            isSentByUser: item.name === infor.user.infor.email,
-          },
-        })
+          saveGroupMess({
+            nameGroup: item.to,
+            messGroup: {
+              text: item.mes,
+              isSentByUser: item.name === infor.user.infor.email,
+            },
+          })
       );
-      // const newChat = [...messages, { text: text, isSentByUser: a }];
-      setMessages((pre) => [
-        ...pre,
+      // Ensure messages state is updated correctly
+      setMessages(prevMessages => [
+        ...prevMessages,
         { text: item.mes, isSentByUser: item.name === infor.user.infor.email },
       ]);
     });
   };
+
   useEffect(() => {
     if (respone && respone.status === "success") {
       switch (respone.event) {
@@ -220,6 +240,7 @@ function GroupComponent(props, ref) {
         <div className={cx("item")}>
           <div className={cx("img")}>
             {/* <img className={cx("imgin")} src="img/p1.jpg" alt="avatar" /> */}
+            <img src="img/p2.jpg" alt="avatar"/>
           </div>
           <div className={cx("name")}>
             <div className={cx("info")}>
@@ -239,6 +260,8 @@ function GroupComponent(props, ref) {
             <img
               key={index}
               alt="image"
+              // src="img/p2.jpg"
+              // alt="avatar"
               src={message.text.slice(
                 "knuckleball".length,
                 message.text.length
