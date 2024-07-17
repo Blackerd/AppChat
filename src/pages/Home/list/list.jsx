@@ -3,7 +3,7 @@ import Friend from "../friend/friend";
 import "./list.css";
 import { useDispatch, useSelector } from "react-redux";
 import { WebsocketContext } from "../../../socket/WebsocketContent";
-import { GET_PEOPLE_CHAT_MES, GET_ROOM_CHAT_MES, Logout, SEND_CHAT, CREATE_ROOM, JOIN_ROOM } from "../../../api/action";
+import { GET_PEOPLE_CHAT_MES, GET_ROOM_CHAT_MES, Logout, SEND_CHAT, CREATE_ROOM, JOIN_ROOM, SEND_CHAT_TO_ROOM } from "../../../api/action";
 import { clearGroupMess, clearMessage, setGroups, saveMessage, saveGroupMess, logout, setFriends } from "../../../store/userSlice";
 import ShowGroup from "../../../components/group/showgroup/GroupShow";
 import { Link, useNavigate } from "react-router-dom";
@@ -28,12 +28,11 @@ const List = (props) => {
     dispatch(logout());
     navigate("/");
   };
-// hàm này sẽ xử lý khi click vào 1 người bạn và hiện ra tin nhắn giữa 2 người
+// hàm này sẽ xử lý khi click vào 1 người bạn hoặc 1 nhóm
   const handleItemOnClick = (item) => {
     if (item.type === 0) { // nếu là người bạn
       const getPeopleChatMess = GET_PEOPLE_CHAT_MES(item.name); // lấy tin nhắn giữa 2 người
       sender(getPeopleChatMess); // gửi yêu cầu lấy tin nhắn giữa 2 người
-      console.log(getPeopleChatMess)
     } else if (item.type === 1) { // nếu là nhóm
       const getRoomChatMess = GET_ROOM_CHAT_MES(item.nameGroup);
       sender(getRoomChatMess);// gửi yêu cầu lấy tin nhắn trong nhóm
@@ -56,19 +55,32 @@ const List = (props) => {
     });
   };
 
-
   const handleGetRoomChatMess = (payload) => {
-    payload.data.chatData.forEach((item) => {
-      const { name, mes } = item;
+    const { data } = payload;
+    const { chatData } = data;
+
+    chatData.forEach((item) => {
+      const { name, mes, createAt } = item;
       const isSentByUser = name === userInfo.email;
+
+      // Xác định nội dung tin nhắn dựa trên người gửi
+      const messageContent = isSentByUser ? `Bạn: ${mes}` : `${name}: ${mes}`;
+
+    console.log("name: " + name);
+    console.log("mes: " + mes);
+    console.log("createAt: " + createAt);
       dispatch(
           saveGroupMess({
-            nameGroup: payload.data.name,
-            messGroup: { text: mes, sender: name, isSentByUser },
+            nameGroup: data.name,
+            messGroup: {
+              text: messageContent,
+              sender: name, isSentByUser,
+              createdAt: createAt },
           })
       );
     });
   };
+
 
   const handleSendChat = (payload) => {
     console.log(payload);
@@ -77,6 +89,15 @@ const List = (props) => {
       const item = { name: payload.data.name, type: 0, actionTime: "" };
       dispatch(setFriends({ item }));
       sender(SEND_CHAT(payload.data.name, ""));
+    }
+  };
+
+  const handleSendChatToRoom = (payload) => {
+    const check = groups.every((item) => item.nameGroup !== payload.data.name);
+    if (check) {
+      const item = { nameGroup: payload.data.name, type: 1, actionTime: "" };
+      dispatch(setGroups({ item }));
+      sender(SEND_CHAT_TO_ROOM(payload.data.name, ""));
     }
   };
 
@@ -89,6 +110,9 @@ const List = (props) => {
         case "GET_PEOPLE_CHAT_MES":
           handleGetPeopleChatMess(respone);
           break;
+        case "SEND_CHAT_TO_ROOM":
+            handleSendChatToRoom(respone);
+            break;
         case "GET_ROOM_CHAT_MES":
           handleGetRoomChatMess(respone);
           break;
@@ -124,7 +148,7 @@ const List = (props) => {
     const friend = friends.find((f) => f.name === name);
     if (friend) {
       const lastMessage = friend.listmessage[friend.listmessage.length - 1];
-      console.log("lasst " + lastMessage);
+      // console.log("lasst " + lastMessage);
       if (lastMessage) {
         // Kiểm tra xem tin nhắn được gửi bởi người dùng hiện tại hay không
         const isSentByUser = lastMessage.sender === userInfo.name;
@@ -152,10 +176,10 @@ const List = (props) => {
         <div className="list_header">
           <div className="img">
             <Link to="/info">
-              <img src="https://www.w3schools.com/howto/img_avatar.png" alt="avatar" />
+              <img src="img/p6.jpg" alt="avatar"/>
             </Link>
             <div className="name">
-              <span>{userInfo.name}</span>
+            <span>{userInfo.name}</span>
             </div>
           </div>
           <div className="item log-out" onClick={handleLogout}>
@@ -194,13 +218,13 @@ const List = (props) => {
                   .filter((item) => item.type !== 0 || item.name !== userInfo.name) // Lọc ra những người không phải là người dùng hiện tại
                   .map((item, index) => {
                     const uniqueKey = item.type === 0 ? `friend-${item.name}` : `group-${item.nameGroup}`;
-                    return item.type === 0 ? (
+                    return item.type === 0 ? ( // Nếu là người bạn
                         <Friend
                         key={uniqueKey}
                         img={item.img}
                         name={item.nameGroup || item.name}
                         time={item.time}
-                        message={getLatestMessage(item.name)}
+                        message={getLatestMessage(item.name) || getLatestMessage(item.nameGroup)}
                         unread={item.unread}
                         onClick={() => handleItemOnClick(item)}
                     />

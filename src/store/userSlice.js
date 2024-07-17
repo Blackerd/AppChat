@@ -45,7 +45,6 @@ const userSlice = createSlice({
             type: isCurrentUser ? "currentUser" : "otherUser",
             time: new Date().toISOString(),
           };
-          console.log("Message:", message);
           friend.listmessage.push(message); // Thêm tin nhắn vào danh sách tin nhắn của người dùng
         }
         state.infor.friends[friendIndex] = { ...friend }; // Cập nhật thông tin người dùng
@@ -74,16 +73,18 @@ const userSlice = createSlice({
       const { nameGroup, messGroup } = action.payload;
       const group = state.infor.groups.find((g) => g.nameGroup === nameGroup);
       if (group) {
-        messGroup.forEach((message) => {
-          const isCurrentUser = message.sender === state.infor.name;
-          group.listmessage.push({
-            text: message.text,
-            sender: message.sender,
-            type: isCurrentUser ? "currentUser" : "otherUser",
-          });
+        // Xóa hết tin nhắn cũ của nhóm trước khi thêm mới
+        group.listmessage = [];
+
+        // Thêm từng tin nhắn vào danh sách tin nhắn của nhóm
+        group.listmessage.push({
+          text: messGroup.mes, // Lấy nội dung tin nhắn từ đối tượng messGroup
+          sender: messGroup.name,
+          type: "otherUser", // Đây là tin nhắn từ người khác trong nhóm
         });
       }
     },
+
     clearGroupMess: (state, action) => {
       const { nameGroup } = action.payload;
       const group = state.infor.groups.find((g) => g.nameGroup === nameGroup);
