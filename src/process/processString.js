@@ -1,4 +1,4 @@
 function convertEmailToName(email) {
-  return email.split("@")[0];
+  return email;
 }
 export { convertEmailToName };

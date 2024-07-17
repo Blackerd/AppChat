@@ -12,9 +12,9 @@ function Home() {
   const [isReady, respone, sender] = useContext(WebsocketContext);
   const dispatch = useDispatch();
   const nav = useNavigate();
-
+  console.log(respone);
   const infor = useSelector((state) => state.reducer);
-  if (infor.user.status !== "Auth") nav("/");
+  if (infor.user.status !== "Auth") nav("/login");
 
   const [name, setName] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
@@ -27,8 +27,8 @@ function Home() {
   const hanldeGetUserList = (payload) => {
     payload.data.forEach((item) => {
       return item.type === 0
-          ? dispatch(setFriends({ item }))
-          : dispatch(setGroups({ item }));
+        ? dispatch(setFriends({ item }))
+        : dispatch(setGroups({ item }));
     });
   };
 
@@ -71,29 +71,27 @@ function Home() {
   };
 
   return (
-        <div className="home">
-            <div className="content-container">
-              <div className="list-container">
-                <List
-                    setChatUser={handleSetSelectedUser}
-                    handleDeleteFillInput={handleDeleteFillInput}
-                />
-              </div>
-              <div className="chat-container">
-                {selectedUser ? (
-                    selectedUser.type === 0 ? (
-                        <Chat friend={selectedUser} ref={inputFillGroup} />
-                    ) : (
-                        <GroupComponent group={selectedUser} ref={inputFillGroup} />
-                    )
-                ) : (
-                    <div className="empty-chat">
-                      Trống
-                    </div>
-                )}
-              </div>
-            </div>
+    <div className="home">
+      <div className="content-container">
+        <div className="list-container">
+          <List
+            setChatUser={handleSetSelectedUser}
+            handleDeleteFillInput={handleDeleteFillInput}
+          />
         </div>
+        <div className="chat-container">
+          {selectedUser ? (
+            selectedUser.type === 0 ? (
+              <Chat friend={selectedUser} ref={inputFillGroup} />
+            ) : (
+              <GroupComponent group={selectedUser} refHan={inputFillGroup} />
+            )
+          ) : (
+            <div className="empty-chat">Trống</div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 

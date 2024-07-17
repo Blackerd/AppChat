@@ -1,12 +1,12 @@
 import classNames from "classnames/bind";
 import { useEffect, useRef, useState, useCallback, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFriends, setName, setEmail } from "../../store/userSlice";
+import { setFriends, setName, setEmail, logout } from "../../store/userSlice";
 //
 import Styles from "./styles.module.css";
 import InputComponent from "../../components/input/InputComponent";
 import ButtonComponent from "../../components/button/ButtonComponent";
-import { isEmail, isPassValid, isNotEmrty } from "../../process/checkInput";
+import { isPassValid, isNotEmrty } from "../../process/checkInput";
 import { useNavigate } from "react-router-dom";
 import { GET_USER_LIST, Login } from "../../api/action";
 import { WebsocketContext } from "../../socket/WebsocketContent";
@@ -43,12 +43,13 @@ function LogIn() {
   // {event: 'LOGIN', status: 'error', mes: 'You are already logged in'}
   useEffect(() => {
     if (respone && respone.status === "success") {
-      console.log(respone);
-      let name = convertEmailToName(form.account);
-      dispatch(setName(name));
-      dispatch(setEmail(form.email));
-      sender(GET_USER_LIST());
-      nav("/home");
+      if ("LOGIN") {
+        let name = convertEmailToName(form.account);
+        dispatch(setName(name));
+        dispatch(setEmail(form.email));
+        sender(GET_USER_LIST());
+        nav("/home");
+      }
     } else if (respone && respone.status === "error") {
       inputEmail.current.setError("Account hoặc password không đúng");
     }
@@ -63,7 +64,7 @@ function LogIn() {
     }
     if (!isNotEmrty(form.account) && isPassValid(form.password)) {
       const login = Login(form.account, form.password);
-      sender(login, true);
+      sender(login);
     }
   };
   // const handleSubmit = (e) => {

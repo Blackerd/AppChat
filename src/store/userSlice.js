@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    infor: { name: "", email: "", friends: [], groups: [], messages: []},
-    status: "",
+    infor: { name: "", email: "", friends: [], groups: [], messages: [] },
+    status: "UnAuth",
   },
   reducers: {
     setName: (state, action) => {
@@ -37,7 +37,8 @@ const userSlice = createSlice({
       // Nếu người dùng tồn tại trong danh sách bạn bè
       if (friendIndex !== -1) {
         const friend = state.infor.friends[friendIndex]; // Lấy thông tin người dùng
-        if (mess && mess.text && mess.sender) { // Kiểm tra xem tin nhắn có dữ liệu không
+        if (mess && mess.text && mess.sender) {
+          // Kiểm tra xem tin nhắn có dữ liệu không
           const isCurrentUser = mess.sender === state.infor.email; // Kiểm tra xem người gửi có phải là người đăng nhập không
           const message = {
             text: mess.text,
@@ -45,7 +46,6 @@ const userSlice = createSlice({
             type: isCurrentUser ? "currentUser" : "otherUser",
             time: new Date().toISOString(),
           };
-          console.log("Message:", message);
           friend.listmessage.push(message); // Thêm tin nhắn vào danh sách tin nhắn của người dùng
         }
         state.infor.friends[friendIndex] = { ...friend }; // Cập nhật thông tin người dùng
@@ -74,14 +74,16 @@ const userSlice = createSlice({
       const { nameGroup, messGroup } = action.payload;
       const group = state.infor.groups.find((g) => g.nameGroup === nameGroup);
       if (group) {
-        messGroup.forEach((message) => {
-          const isCurrentUser = message.sender === state.infor.name;
-          group.listmessage.push({
-            text: message.text,
-            sender: message.sender,
-            type: isCurrentUser ? "currentUser" : "otherUser",
-          });
-        });
+        // messGroup.forEach((message) => {
+        const isSentByUser = messGroup.isSentByUser;
+        group.listmessage = [
+          ...group.listmessage,
+          {
+            text: messGroup.text,
+            isSentByUser,
+          },
+        ];
+        // });
       }
     },
     clearGroupMess: (state, action) => {
@@ -92,8 +94,13 @@ const userSlice = createSlice({
       }
     },
     logout: (state, action) => {
-      state.infor = { name: "", email: "", friends: [], groups: [] };
-      state.status = "UnAuth";
+      return {
+        ...state,
+        infor: { name: "", email: "", friends: [], groups: [] },
+        status: `${"UnAuth"}`,
+      };
+      // state.infor = { name: "", email: "", friends: [], groups: [] };
+      // state.status = "UnAuth";
     },
     saveImageURL: (state, action) => {
       const { name, imageUrl } = action.payload;

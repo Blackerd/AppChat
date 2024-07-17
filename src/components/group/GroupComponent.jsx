@@ -15,11 +15,11 @@ import {
   faPhone,
   faVideo,
 } from "@fortawesome/free-solid-svg-icons";
-import Message from "../../pages/Home/message/message";
+import EmojiPicker from "emoji-picker-react";
 import { WebsocketContext } from "../../socket/WebsocketContent";
 import { SEND_CHAT_TO_ROOM, GET_ROOM_CHAT_MES } from "../../api/action";
 import { useDispatch, useSelector } from "react-redux";
-import { saveGroupMess } from "../../store/userSlice";
+import { saveGroupMess, clearGroupMess } from "../../store/userSlice";
 import useFirebase from "../../firebaseSocket/Firebase";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
@@ -29,7 +29,7 @@ import InfinityComponent from "../animation/Infinity";
 
 const cx = classNames.bind(Styles);
 
-function GroupComponent(props, ref) {
+function GroupComponent(props, refHan) {
   // Function to scroll to the bottom of the element
   const firebaseState = useFirebase();
   //
@@ -38,7 +38,7 @@ function GroupComponent(props, ref) {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef();
   // function to handle input from the parent components
-  useImperativeHandle(ref, () => ({
+  useImperativeHandle(refHan, () => ({
     clearInput() {
       setNewMessage((p) => "");
       setFile((p) => null);
@@ -59,6 +59,13 @@ function GroupComponent(props, ref) {
       reader.readAsDataURL(selectedFile);
     } else {
       alert("Please select an image file.");
+      // alert(selectedFile.type);
+      // setFile(selectedFile);
+      // const reader = new FileReader();
+      // reader.onload = (event) => {
+      //   setPreview(event.target.result);
+      // };
+      // reader.readAsDataURL(selectedFile);
     }
   };
   //
@@ -69,40 +76,40 @@ function GroupComponent(props, ref) {
   const [group, setGroup] = useState(
     groups.find((item) => item.nameGroup === props.group.nameGroup)
   );
-
   const [messages, setMessages] = useState(group.listmessage);
   const [newMessage, setNewMessage] = useState("");
   //save message into friend in redux
-  useEffect(() => {}, [group]);
   useEffect(() => {
     setGroup((pre) =>
       groups.find((item) => item.nameGroup === props.group.nameGroup)
     );
-  }, [props.group]);
+    setMessages((pre) => group.listmessage);
+  }, [props.group, group, groups]);
 
   const handleSendeChatMess = (payload) => {
     // let mess = payload.data.mes;
     // let nameSender = payload.data.name;
     // let namegroup = payload.data.to;
-    dispatch(
-      saveGroupMess({
-        name: payload.data.name,
-        mess: {
-          text: payload.data.mes,
-          isSentByUser: payload.data.name !== infor.user.infor.email,
-        },
-      })
-    );
+    // dispatch(
+    //   saveGroupMess({
+    //     name: payload.data.name,
+    //     mess: {
+    //       text: payload.data.mes,
+    //       isSentByUser: payload.data.name !== infor.user.infor.email,
+    //     },
+    //   })
+    // );
     const newChat = [
       ...messages,
       {
         text: payload.data.mes,
-        isSentByUser: payload.data.name !== infor.user.infor.email,
+        isSentByUser:
+          payload.data.name === infor.user.infor.email ||
+          payload.data.name === infor.user.infor.name,
       },
     ];
     setNewMessage("");
     setMessages(newChat);
-    setUploading((p) => !p);
     // data:{id: 0, name: 'doxuanhau@gmail.com', type: 0, to: 'ka@gmail.com', mes: '123123123123123'}
     // event:"SEND_CHAT"
     // status:"success"
@@ -137,20 +144,29 @@ function GroupComponent(props, ref) {
   // };
 
   const handleGetRoomChatMess = (payload) => {
-    payload.data.chatData.reverse().forEach(item => { // lấy ra từng tin nhắn trong mảng chatData
+    dispatch(clearGroupMess({ nameGroup: group.nameGroup }));
+
+    payload.data.chatData.reverse().forEach((item) => {
+      let isSentByUser =
+        item.name === infor.user.infor.email ||
+        item.name === infor.user.infor.name;
       dispatch(
-          saveGroupMess({
-            nameGroup: item.to,
-            messGroup: {
-              text: item.mes,
-              isSentByUser: item.name === infor.user.infor.email,
-            },
-          })
+        saveGroupMess({
+          nameGroup: item.to,
+          messGroup: {
+            text: item.mes,
+            isSentByUser,
+          },
+        })
       );
+
       // Ensure messages state is updated correctly
-      setMessages(prevMessages => [
+      setMessages((prevMessages) => [
         ...prevMessages,
-        { text: item.mes, isSentByUser: item.name === infor.user.infor.email },
+        {
+          text: item.mes,
+          isSentByUser: item.name === infor.user.infor.email,
+        },
       ]);
     });
   };
@@ -170,18 +186,19 @@ function GroupComponent(props, ref) {
     }
   }, [respone]);
   //
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [selectedEmoji, setSelectedEmoji] = useState("");
+  const handleEmojiOnClick = (e) => {
+    setShowEmojiPicker((p) => !p);
+    setSelectedEmoji((p) => e.imageUrl);
+    console.log(e.imageUrl);
+    setPreview((p) => e.imageUrl);
+  };
+  //
 
   const handleSendGroupMessages = async () => {
     setUploading((p) => !p);
     if (newMessage.trim()) {
-      //
-      dispatch(
-        saveGroupMess({
-          name: group.nameGroup,
-          mess: { text: newMessage, isSentByUser: true },
-        })
-      );
-      //
       const newChat = [...messages, { text: newMessage, isSentByUser: true }];
       setMessages(newChat);
       setNewMessage("");
@@ -194,7 +211,6 @@ function GroupComponent(props, ref) {
         firebaseState,
         `images/${infor.user.infor.email}/${path}`
       );
-      setUploading((p) => !p);
       try {
         await uploadBytes(storageRef, file);
         const downloadUrl = await getDownloadURL(storageRef);
@@ -202,12 +218,12 @@ function GroupComponent(props, ref) {
         if (downloadUrl) {
           const url = `knuckleball${downloadUrl}`;
           // //
-          dispatch(
-            saveGroupMess({
-              name: group.nameGroup,
-              mess: { text: url, isSentByUser: true },
-            })
-          );
+          // dispatch(
+          //   saveGroupMess({
+          //     name: group.nameGroup,
+          //     mess: { text: url, isSentByUser: true },
+          //   })
+          // );
           setFile((p) => null);
           setPreview((p) => "");
           //
@@ -222,6 +238,15 @@ function GroupComponent(props, ref) {
       } finally {
         setUploading((p) => !p);
       }
+    } else if (preview) {
+      const newChat = [...messages, { text: preview, isSentByUser: true }];
+      setMessages((p) => newChat);
+      setNewMessage((p) => "");
+      sender(SEND_CHAT_TO_ROOM(props.group.nameGroup, preview));
+      setUploading((p) => !p);
+      // setShowEmojiPicker((p) => !p);
+      setSelectedEmoji((p) => "");
+      setPreview((p) => "");
     }
   };
   const mainElement = useRef();
@@ -231,16 +256,14 @@ function GroupComponent(props, ref) {
       mainElement.current.scrollTop = scrollHeight - clientHeight;
     }
   };
-  useEffect(() => {
-    scrollToBottom();
-  }, [respone]);
+
   return (
     <div className={cx("chatContainer")}>
       <div className={cx("header")}>
         <div className={cx("item")}>
           <div className={cx("img")}>
             {/* <img className={cx("imgin")} src="img/p1.jpg" alt="avatar" /> */}
-            <img src="img/p2.jpg" alt="avatar"/>
+            <img src="img/p2.jpg" alt="avatar" />
           </div>
           <div className={cx("name")}>
             <div className={cx("info")}>
@@ -256,16 +279,21 @@ function GroupComponent(props, ref) {
       </div>
       <div ref={mainElement} className={cx("main")}>
         {messages.map((message, index) => {
-          return message.text.startsWith("knuckleballhttps") ? (
+          return message.text.startsWith("knuckleballhttps") ||
+            message.text.startsWith("https://cdn.jsdelivr.net/npm/") ? (
             <img
               key={index}
               alt="image"
               // src="img/p2.jpg"
               // alt="avatar"
-              src={message.text.slice(
-                "knuckleball".length,
-                message.text.length
-              )}
+              src={
+                message.text.startsWith("knuckleballhttps")
+                  ? message.text.slice(
+                      "knuckleball".length,
+                      message.text.length
+                    )
+                  : message.text
+              }
               className={cx(
                 "messageimg",
                 `${message.isSentByUser ? "userimg" : "friendimg"}`
@@ -283,12 +311,17 @@ function GroupComponent(props, ref) {
             </div>
           );
         })}
+        {showEmojiPicker && (
+          <div className={cx("emojipicker")}>
+            <EmojiPicker onEmojiClick={handleEmojiOnClick} />
+          </div>
+        )}
       </div>
       <div className={cx("footer")}>
         {preview ? (
           <img
             // ref={fileInputRef}
-            src={preview}
+            src={preview || selectedEmoji}
             alt="Preview"
             className={cx("previewimg")}
           />
@@ -302,7 +335,13 @@ function GroupComponent(props, ref) {
           />
         )}
         <div className={cx("sendItem")}>
-          <FontAwesomeIcon className={cx("icon")} icon={faFaceSmile} />
+          <FontAwesomeIcon
+            className={cx("icon")}
+            icon={faFaceSmile}
+            onClick={() => {
+              setShowEmojiPicker((p) => !p);
+            }}
+          />
           <input
             className={cx("inputfile")}
             type="file"

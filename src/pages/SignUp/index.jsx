@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import { useEffect, useRef, useState, useContext } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Styles from "./Styles.module.css";
 import InputComponent from "../../components/input/InputComponent";
 import ButtonComponent from "../../components/button/ButtonComponent";
@@ -10,7 +10,6 @@ import {
   isConfirmPass,
   isNotEmrty,
 } from "../../process/checkInput";
-import { login as auth } from "../../store/userSlice";
 import { useDispatch } from "react-redux";
 import { WebsocketContext } from "../../socket/WebsocketContent";
 import { REGISTER } from "../../api/action";
@@ -42,7 +41,7 @@ function Signup() {
       console.log(respone);
       if (respone.status === "success") {
         respone.status = "";
-        nav("/");
+        nav("/login");
       } else if (respone.status === "error") {
         inputEmail.current.setError("Tài khoản đã tồn tại !!");
       }
@@ -127,7 +126,7 @@ function Signup() {
             />
           </form>
           <ButtonComponent title="Sign Up" onClick={handleSigninBtn} />
-          <Link className={cx("link")} to="/">
+          <Link className={cx("link")} to="/login">
             Did you have an account? Sign in
           </Link>
         </div>

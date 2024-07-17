@@ -10,7 +10,7 @@ import PersonalInfoChange from "../pages/personalInfoChange";
 
 const publicRoutes = [
   { path: "/home", component: Home },
-  { path: "/", component: LogIn },
+  { path: "/login", component: LogIn },
   { path: "/signup", component: SignUp },
   { path: "/info", component: Information },
   { path: "/acc_protect", component: AccountProtection },
