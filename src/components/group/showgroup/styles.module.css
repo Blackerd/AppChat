@@ -41,7 +41,7 @@
 .friend .friendItem .item .name .info span {
   font-size: 12px;
   font-weight: bold;
-  color: #fff;
+  color: #000000;
   max-width: 150px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -53,7 +53,7 @@
 }
 .friend .friendItem .item .name .text span {
   font-size: 12px;
-  color: #fff;
+  color: #000000;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -71,7 +71,7 @@
   cursor: pointer;
 }
 .friend .friendItem .item:hover .name .info span {
-  color: #fff;
+  color: #1A5319;
 }
 
 /*# sourceMappingURL=styles.module.css.map */

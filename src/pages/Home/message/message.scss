@@ -20,16 +20,16 @@
 }
 
 .sentMessage {
-  background-color: #8E3E63;
-  color: #f1f1f1;
+  background-color: #F5F7F8;
+  color: #151515;
   align-self: flex-end;
   border-top-right-radius: 0;
   font-size: 13px;
 }
 
 .receivedMessage {
-  background-color: #7469B6;
-  color: #f1f1f1;
+  background-color: #304463;
+  color: #ecf0f3;
   align-self: flex-start;
   border-top-left-radius: 0;
   font-size: 13px;
@@ -42,7 +42,7 @@
 
 .messageSender {
   font-size: 13px;
-  color: #888;
+  color: #ecf0f3;
   margin-top: 4px;
 }
 .avatar{

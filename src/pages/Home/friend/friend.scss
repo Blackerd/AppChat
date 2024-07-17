@@ -1,7 +1,7 @@
 .friend {
   margin: 0;
   padding: 0;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid #000000;
   .friendItem {
     display: flex;
     flex-direction: column;
@@ -42,7 +42,7 @@
           span {
             font-size: 12px;
             font-weight: bold;
-            color: #fff;
+            color: #000000;
             max-width: 150px;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -56,7 +56,7 @@
 
           span {
             font-size: 12px;
-            color: #fff;
+            color: #000000;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -65,7 +65,7 @@
 
           .unread {
             background-color: #ff6347;
-            color: white;
+            color: #000000;
             padding: 2px 8px;
             border-radius: 12px;
             font-size: 10px;
@@ -80,7 +80,7 @@
         .name {
           .info {
             span {
-              color: #fff;
+              color: #000000;
             }
           }
         }

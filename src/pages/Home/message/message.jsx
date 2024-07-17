@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import "./message.css";
 
-const Message = ({ text, sender, isSentByUser, img ,createdAt }) => {
+const Message = ({ text, sender, isSentByUser, img }) => {
     const messageRef = useRef(null);
 
     useEffect(() => {
@@ -11,13 +11,6 @@ const Message = ({ text, sender, isSentByUser, img ,createdAt }) => {
         }
     }, [text]); // Theo dõi thay đổi của tin nhắn để cuộn tới tin nhắn mới
 
-    // Kiểm tra nếu tin nhắn là ảnh (bắt đầu bằng "data:image/")
-    const isImageMessage = text.startsWith("data:image/");
-
-    // Xác định nội dung tin nhắn dựa trên người gửi
-    const messageContent = isSentByUser ? `Bạn: ${text}` : `${sender}: ${text}`;
-
-
     return (
         <div ref={messageRef} className={`messageContainer ${isSentByUser ? "sent" : "received"}`}>
             {/* Hiển thị avatar của người gửi tin nhắn đối phương */}
@@ -26,18 +19,11 @@ const Message = ({ text, sender, isSentByUser, img ,createdAt }) => {
                     <img src="img/p1.jpg" alt="avatar"/>
                 </div>
             )}
-            {/* Nếu tin nhắn là ảnh, hiển thị ảnh, ngược lại hiển thị văn bản */}
-            {isImageMessage ? (
-                <div className="imageMessage">
-                    <img src={text} alt="Sent as image" />
-                </div>
-            ) : (
-                <div className={`messageBox ${isSentByUser ? "sentMessage" : "receivedMessage"}`}>
-                    <p className="messageText">{text}</p>
-                    {/* Hiển thị tên người gửi tin nhắn đối phương */}
-                    {!isSentByUser && <p className="messageSender">{sender}</p>}
-                </div>
-            )}
+            <div className={`messageBox ${isSentByUser ? "sentMessage" : "receivedMessage"}`}>
+                <p className="messageText">{text}</p>
+                {/* Hiển thị tên người gửi tin nhắn đối phương */}
+                {!isSentByUser && <p className="messageSender">{sender}</p>}
+            </div>
         </div>
     );
 };

@@ -2,7 +2,7 @@
   border-radius: 0 10px 10px 0;
   display: grid;
   grid-template-rows: auto 1fr auto auto;
-  background: #f5f7f8;
+  background: #EEEDEB;
   height: 90vh;
   width: 90vw;
 
@@ -109,15 +109,6 @@
         border-top-left-radius: 0;
       }
     }
-    .messageimg {
-      max-width: 60%;
-      margin: 5px 0;
-      align-self: flex-start; // Adjust alignment for images
-
-      &.userimg {
-        align-self: flex-end; // Align user's sent images to the right
-      }
-    }
   }
 
   .emojiPicker {
@@ -144,13 +135,6 @@
     margin: 5px;
     gap: 10px;
 
-    .previewimg {
-      max-width: 100px;
-      max-height: 100px;
-      border-radius: 5px;
-      object-fit: cover;
-    }
-
 
     @media (max-width: 768px) {
       margin: 2px;
@@ -159,12 +143,12 @@
 
     .input {
       flex: 1;
-      padding: 10px;
+      padding: 12px;
       border-radius: 5px;
       border: none;
-      background: #8E3E63;
+      background: #EEEDEB;
       box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
-      color: #ecf0f3;
+      color: #151515;
       font-size: 13px;
 
       @media (max-width: 768px) {
@@ -198,7 +182,7 @@
         align-items: center;
         gap: 5px;
         padding: 10px 20px 10px 20px;
-        background: #8E3E63;
+        background: #304463;
         border-radius: 5px;
         color: #ecf0f3;
         cursor: pointer;
