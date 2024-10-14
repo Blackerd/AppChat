@@ -1,8 +1,6 @@
 import Styles from "./styles.module.css";
 import classNames from "classnames/bind";
-import PropTypes from "prop-types";
-import { forwardRef, useEffect, useImperativeHandle } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 const cx = classNames.bind(Styles);
 
 function ButtonComponent(props) {

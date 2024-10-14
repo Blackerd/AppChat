@@ -2,7 +2,7 @@
   border-radius: 0 10px 10px 0;
   display: grid;
   grid-template-rows: auto 1fr auto auto;
-  background: #f5f7f8;
+  background: #eeedeb;
   height: 90vh;
   width: 90vw;
 
@@ -64,7 +64,7 @@
 
           .icon {
             &:hover {
-              color: #1A5319;
+              color: #1a5319;
             }
           }
         }
@@ -95,7 +95,7 @@
       flex-direction: column;
 
       &.user {
-        background-color: #294B29;
+        background-color: #294b29;
         color: #f1f1f1;
         align-self: flex-end;
         border-top-right-radius: 0;
@@ -134,7 +134,6 @@
     margin: 5px;
     gap: 10px;
 
-
     @media (max-width: 768px) {
       margin: 2px;
       gap: 5px;
@@ -145,7 +144,7 @@
       padding: 10px;
       border-radius: 5px;
       border: none;
-      background: #8E3E63;
+      background: #8e3e63;
       box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
       color: #ecf0f3;
       font-size: 13px;
@@ -154,7 +153,6 @@
         padding: 5px;
         font-size: 12px;
       }
-
     }
 
     .sendItem {
@@ -181,7 +179,7 @@
         align-items: center;
         gap: 5px;
         padding: 10px 20px 10px 20px;
-        background: #8E3E63;
+        background: #8e3e63;
         border-radius: 5px;
         color: #ecf0f3;
         cursor: pointer;
@@ -192,13 +190,12 @@
         }
 
         &:hover {
-          background: #FF7777;
+          background: #ff7777;
         }
         @media (max-width: 768px) {
           padding: 5px 10px;
           font-size: 12px;
         }
-
       }
     }
   }
